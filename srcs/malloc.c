@@ -6,39 +6,39 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/02 00:36:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/02 00:36:40 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/02 00:49:28 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_malloc.h"
+#include "malloc.h"
 #include "ft_printf.h"
 #include <stddef.h>
 
-void	*malloc(size_t size)
+void	*ft_malloc(size_t size)
 {
 	void	*ptr;
 
 	ptr = 0;
 	(void)size;
-	ft_printf("called malloc()\n");
+	ft_printf("called ft_malloc()\n");
 	return (ptr);
 }
 
-void	*realloc(void *ptr, size_t size)
+void	*ft_realloc(void *ptr, size_t size)
 {
 	void	*new_ptr;
 
 	new_ptr = 0;
 	(void)ptr;
 	(void)size;
-	ft_printf("called realloc()\n");
+	ft_printf("called ft_realloc()\n");
 	return (new_ptr);
 }
 
-void	free(void *ptr)
+void	ft_free(void *ptr)
 {
 	(void)ptr;
-	ft_printf("called free()\n");
+	ft_printf("called ft_free()\n");
 }
 
 int		main()

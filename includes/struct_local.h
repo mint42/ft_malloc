@@ -6,12 +6,15 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/02 00:34:07 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/02 00:36:00 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/02 00:39:00 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCT_LOCAL_H
 # define STRUCT_LOCAL_H
+
+# include <stddef.h>
+# include <stdbool.h>
 
 struct				s_local
 {
