@@ -1,7 +1,6 @@
 # FT_MALLOC
 
-ft_malloc is a recreation of the malloc dynamic allocation library. This includes the functions malloc(), realloc(), and free().
-ft_malloc is a systems project in the 42 curriculum. It introduces the concepts of virtual memory allocation, paging, and how to work with the heap.
+ft_malloc is a recreation of the malloc dynamic allocation library. This includes the functions malloc(), realloc(), and free(). It expands on the concept of memory management by learning how to maintain a process' heap. ft_malloc is a systems project in the 42 curriculum.
 
 ## Getting Started
 
