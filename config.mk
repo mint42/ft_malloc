@@ -10,7 +10,11 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME := ft_malloc
+ifeq ($(HOSTTYPE),)
+	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
+endif
+
+NAME := libft_malloc_$(HOSTTYPE).so
 
 LIBFT_NAME := libft.a
 LIBFT_DIR := ./libft
