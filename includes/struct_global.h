@@ -17,15 +17,14 @@
 
 struct				s_global
 {
-	s_local			*small;
-	s_local			*medium;
-	s_local			*large;
-	unsigned int	nsmall;
-	unsigned int	nsmallfree;
-	unsigned int	nmedium;
-	unsigned int	nmediumfree;
-	unsigned int	nlarge;
-	unsigned int	nlargefree;
+	s_page			*small_pages;
+	s_page			*medium_pages;
+	s_lalloc		*large_allocs;
+	s_smalloc		*small_free;
+	s_smalloc		*medium_free;
+	size_t			n_spages;
+	size_t			n_mpages;
+	size_t			n_lallocs;
 };
 
 #endif

@@ -14,17 +14,47 @@
 # define STRUCT_LOCAL_H
 
 # include <stddef.h>
-# include <stdbool.h>
 
-struct				s_local
+/*
+**	2 Linked lists of allocated nodes.
+**	(small-medium allocs and large allocs)
+*/
+
+/*
+**	For small/med allocs, the next pointer will only be needed if the space is
+**	free. If so, it will be added to a linked list of other free nodes. For
+**	quick access.
+*/
+
+struct				s_smalloc
 {
-	bool			free;
+	size_t			used;
+	s_local			*next_free;
+};
+
+/*
+**	For large allocs, it will be used as a pointer to the next large alloc.
+**	All of which are 1+ pages.
+*/
+
+struct				s_lalloc
+{
 	size_t			used;
 	size_t			size;
-	size_t			npages;
-	size_t			pagen;
+	s_local			*next_alloc;
+};
+
+/*
+**	Linked list of allocated PAGES.
+**	Used at the head of small and medium allocated pages.
+*/
+
+struct				s_page
+{
+	size_t			start_addr;
+	size_t			end_addr;
+	size_t			nfree;
 	s_local			*next_page;
-	s_local			*next;
 };
 
 #endif
