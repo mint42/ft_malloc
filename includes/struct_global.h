@@ -17,14 +17,16 @@
 
 struct				s_global
 {
-	s_page			*small_pages;
-	s_page			*medium_pages;
-	s_lalloc		*large_allocs;
-	s_smalloc		*small_free;
-	s_smalloc		*medium_free;
-	size_t			n_spages;
-	size_t			n_mpages;
-	size_t			n_lallocs;
+	s_page			*tpages;
+	s_page			*tpages_tail;
+	s_page			*spages;
+	s_page			*spages_tail;
+	s_lalloc		*lallocs;
+	s_lalloc		*lallocs_tail;
+	s_tsalloc		*tallocs_free;
+	s_tsalloc		*sallocs_free;
+	size_t			ntpages;
+	size_t			nspages;
 };
 
 #endif
