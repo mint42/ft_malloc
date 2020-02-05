@@ -15,9 +15,13 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+/*
+**	tsl will either be a header struct to a tiny, small, or large page
+*/
+
 void	*ft_malloc(size_t size)
 {
-	void	*ptr;
+	void	*tsl;
 
 	ft_printf("called ft_malloc()\n");
 
@@ -33,10 +37,10 @@ void	*ft_malloc(size_t size)
 void	*ft_realloc(void *ptr, size_t new_size)
 {
 	void		*new_ptr;
-	s_local		*node;
+	void		*old_ptr;
 
 	ft_printf("called ft_realloc()\n");
-	node = find_node(ptr);
+	old_ptr = find_memory(ptr);
 	if (new_size <= node.size)
 		return (ptr);
 	new_ptr = malloc(new_size);
