@@ -15,32 +15,33 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-/*
-**	tsl will either be a header struct to a tiny, small, or large page
-*/
-
 void	*ft_malloc(size_t size)
 {
-	void	*tsl;
+	void	*ptr;
 
-	ft_printf("called ft_malloc()\n");
-
-	if (size <= SMALL_BUCKET)
-		ptr = make_small_ptr(global.small);
-	else if (size <= SMALL_MEDIUM)
-		ptr = make_medium_ptr(global.medium);
+	if (size <= TINY_ALLOC_SIZE)
+	{
+		if (!malloc_info.free_talloc)
+			make_new_page(TINY_ALLOC_SIZE);
+		ptr = dequeue(malloc_info.free_talloc);
+	}
+	else if (size <= SMALL_ALLOC_SIZE)
+	{
+		if (!malloc_info.free_salloc)
+			make_new_page(SMALL_ALLOC_SIZE);
+		ptr = dequeue(malloc_info.free_salloc);
+	}
 	else
-		ptr = make_large_ptr(global.large);
+		ptr = make_large_alloc(size);
 	return (ptr);
 }
 
 void	*ft_realloc(void *ptr, size_t new_size)
 {
 	void		*new_ptr;
-	void		*old_ptr;
+	void		*header;
 
-	ft_printf("called ft_realloc()\n");
-	old_ptr = find_memory(ptr);
+	ptr = find_alloc(ptr);
 	if (new_size <= node.size)
 		return (ptr);
 	new_ptr = malloc(new_size);
@@ -53,9 +54,8 @@ void	ft_free(void *ptr)
 {
 	s_local		*node;
 
-	node = find_node(ptr);
+	node = find_alloc(ptr);
 	free(node);
-	ft_printf("called ft_free()\n");
 }
 
 int		main()

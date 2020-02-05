@@ -10,23 +10,31 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STRUCT_GLOBAL_H
-# define STRUCT_GLOBAL_H
+#ifndef GLOBAL_STRUCT_G_MALLOC_H
+# define GLOBAL_STRUCT_G_MALLOC_H
 
-#include "struct_local.h"
+#include "struct_tsPageHeader.h"
+#include "struct_tsAllocHeader.h"
+#include "struct_lAllocHeader.h"
+#include <stddef.h>
 
-struct				s_global
+/*
+**	Global struct holding heads and tails to the different zones, and also
+**	a "stack" of free-for-use spaces
+*/
+
+struct					g_malloc
 {
-	s_page			*tpages;
-	s_page			*tpages_tail;
-	s_page			*spages;
-	s_page			*spages_tail;
-	s_lalloc		*lallocs;
-	s_lalloc		*lallocs_tail;
-	s_tsalloc		*tallocs_free;
-	s_tsalloc		*sallocs_free;
-	size_t			ntpages;
-	size_t			nspages;
+	s_tsPageHeader		*tpages;
+	s_tsPageHeader		*tpages_tail;
+	s_tsPageHeader		*spages;
+	s_tsPageHeader		*spages_tail;
+	s_lAllocHeader		*lallocs;
+	s_lAllocHeader		*lallocs_tail;
+	s_tsAllocHeader		*free_tallocs;
+	s_tsAllocHeader		*free_sallocs;
+	size_t				ntpages;
+	size_t				nspages;
 };
 
 #endif
