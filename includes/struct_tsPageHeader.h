@@ -11,7 +11,7 @@
 struct					s_tsPageHeader
 {
 	size_t				start_addr;
-	size_t				nfree;
+	size_t				nused;
 	s_local				*next_page;
 };
 

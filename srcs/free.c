@@ -5,14 +5,33 @@
 
 static void		free_tiny(struct s_tsAllocHeader *header)
 {
-	malloc_info->free_tallocs_tail->next = header;
-	malloc_info->free_tallocs_tail = malloc_info->free_tallocs_tail->next;
+	struct s_tsPageHeader	*page_header;
+
+	page_header = header - (malloc_info->pagesize & (void *)header);
+	if (page_header->nused == 1 && malloc_info->tpages > NPAGES_OVERHEAD)
+		munmap(page_header);
+	else
+	{
+		--page_header->nfree;
+		malloc_info->free_tallocs_tail->next = header;
+		malloc_info->free_tallocs_tail = malloc_info->free_tallocs_tail->next;
+	}
+//	for if unmapping needs to happen -> else if ()
 }
 
 static void		free_small(struct s_tsAllocHeader *header)
 {
-	malloc_info->free_tallocs_tail->next = header;
-	malloc_info->free_tallocs_tail = malloc_info->free_tallocs_tail->next;
+	struct s_tsPageHeader	*page_header;
+
+	page_header = header - (malloc_info->pagesize & (void *)header);
+	if (page_header->nused == 1 && malloc_info->spages > NPAGES_OVERHEAD)
+		munmap(page_header);
+	else
+	{
+		--page_header->nfree;
+		malloc_info->free_sallocs_tail->next = header;
+		malloc_info->free_sallocs_tail = malloc_info->free_sallocs_tail->next;
+	}
 }
 
 static void		free_large(struct s_lAllocHeader *header)

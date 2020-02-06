@@ -9,9 +9,12 @@ void	*ft_realloc(void *ptr, size_t new_size)
 	void			*header;
 	unsigned int	old_size;
 
+	if (!ptr)
+		return (malloc(new_size));
+	new_ptr = 0;
+	zone = find_header(ptr, header);
 	old_size = (zone & (TINY | SMALL)) ? (struct s_tsAllocHeader)header->used :
 			(struct s_lAllocHeader)header->used;
-	zone = find_alloc(ptr, header);
 	if ((zone == TINY && new_size >= TINY_ALLOC_SiZE) ||
 		(zone == SMALL && new_size >= SMALL_ALLOC_SiZE))
 	{
