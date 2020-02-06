@@ -32,7 +32,9 @@ struct					g_malloc
 	s_lAllocHeader		*lallocs;
 	s_lAllocHeader		*lallocs_tail;
 	s_tsAllocHeader		*free_tallocs;
+	s_tsAllocHeader		*free_tallocs_tail;
 	s_tsAllocHeader		*free_sallocs;
+	s_tsAllocHeader		*free_sallocs_tail;
 	size_t				ntpages;
 	size_t				nspages;
 };
