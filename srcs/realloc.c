@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:51:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/06 17:51:34 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/07 07:54:40 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,31 @@
 #include "struct_tsAllocHeader.h"
 #include "struct_lAllocHeader.h"
 #include <stddef.h>
+
+void	cpy_memory(void *newptr, void *ptr, size_t size)
+{
+	unsigned long int	*fast_cur;
+	unsigned char		*slow_cur;
+	unsigned char		sizeoflong;
+
+	sizeoflong = sizeof(unsigned long int);
+	fast_cur = (unsigned long int *)newptr;
+	while (size > sizeoflong)
+	{
+		*fast_cur = *(unsigned long int *)ptr;
+		fast_cur = fast_cur + sizeoflong;
+		src = src + sizeoflong;
+		size = size - sizeoflong;
+	}
+	slow_cur = (unsigned char *)fast_cur;
+	while (size > 0)
+	{
+		*slow_cur = *(unsigned char *)src;
+		++slow_cur;
+		++src;
+		--size;
+	}
+}
 
 void	*ft_realloc(void *ptr, size_t new_size)
 {
@@ -41,7 +66,7 @@ void	*ft_realloc(void *ptr, size_t new_size)
 	else if (zone)
 	{
 		new_ptr = malloc(new_size);
-		ft_memcpy(newptr, ptr, old_size);
+		cpy_memory(newptr, ptr, old_size);
 		ft_free(ptr);
 	}
 	return (new_ptr);
