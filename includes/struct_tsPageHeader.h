@@ -1,14 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   struct_tsPageHeader.h                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/06 17:07:46 by rreedy            #+#    #+#             */
+/*   Updated: 2020/02/06 17:18:44 by rreedy           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef STRUCT_TSPAGEHEADER_H
 # define STRUCT_TSPAGEHEADER_H
 
 # include <stddef.h>
 
-# define N_TINY_ALLOCS_PER_PAGE
-# define N_SMALL_ALLOCS_PER_PAGE 
-
 /*
 **	Linked list of allocated pages.
-**	Used at the very front of tiny and small pages to link them together.
+**	Stored at the very front of tiny and small pages to link them together.
 */
 
 struct					s_tsPageHeader
@@ -17,7 +26,5 @@ struct					s_tsPageHeader
 	unsigned short		nused;
 	s_tsPageHeader		*next_page;
 };
-
-void				init_tsAllocHeader(s_tsPageHeader *header);
 
 #endif

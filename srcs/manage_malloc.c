@@ -1,18 +1,34 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   manage_malloc.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/06 17:38:09 by rreedy            #+#    #+#             */
+/*   Updated: 2020/02/06 17:53:27 by rreedy           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "malloc.h"
+#include "struct_tsPageHeader.h"
+#include "struct_tsAllocHeader.h"
+#include "struct_lAllocHeader.h"
+#include <stddef.h>
+
 void		*make_large_alloc(size_t used_size)
 {
 	struct s_lAllocHeader	*new_header;
 	void					*new_alloc;
-	size_t					page_size;
 
-	page_size = malloc_info->pagesize();
 	new_header->used = used_size;
-	new_header->size = (used_size / page_size) + page_size;
+	new_header->size = (used_size / g_malloc->pagesize) + g_malloc->pagesize;
 	new_alloc = mmap(new_header.size);
 	if (!new_alloc)
-		return (ERROR);
-	new_header->start_addr = new_alloc + sizeof(s_lAllocHeader);
+		return (0);
+	new_header->start_addr = new_alloc + LRG_ALOC_HEADR_SIZ;
 	ft_memcpy(new_alloc, new_header);
-	new_header->prev_alloc = malloc_info.lAlloc_tail->next_alloc;
+	new_header->prev_alloc = g_malloc.lAlloc_tail->next_alloc;
 	new_header->next_alloc = 0;
 	return (new_alloc);
 }
@@ -23,25 +39,25 @@ static void			fill_tiny_page(void *new_page)
 	void					*cur;
 	unsigned int			i;
 
-	new_aheader = (s_tsAllocHeader)cur;
+	new_aheader = (struct s_tsAllocHeader)cur;
 	new_aheader->used = 0;
 	new_aheader->next = 0;
-	cur = cur + TINY_ALLOC_SIZE;
-	i = N_TINY_ALLOCS_ON_PAGE - 1;
+	cur = cur + TS_ALOC_HEADR_SIZ + TNY_ALOC_SIZ;
+	i = N_TNY_ALOCS_PER_PG - 1;
 	while (i > 0)
 	{
 		new_aheader->next_free = cur;
-		new_aheader = (s_tsAllocHeader)cur;
+		new_aheader = (struct s_tsAllocHeader)cur;
 		new_aheader->used = 0;
 		new_aheader->next = 0;
-		malloc_info->free_tallocs_tail->next = new_aheader;
-		malloc_info->free_tallocs_tail = malloc_info->free_tallocs_tail->next;
-		cur = cur + TINY_ALLOC_SIZE;
+		g_malloc->free_tallocs_tail->next = new_aheader;
+		g_malloc->free_tallocs_tail = g_malloc->free_tallocs_tail->next;
+		cur = cur + TS_ALOC_HEADR_SIZ + TNY_ALOC_SIZ;
 		--i;
 	}
-	malloc_info->tpages_tail->next = new_page;
-	malloc_info->tpages_tail = malloc_info->tpages_tail->next;
-	++malloc_info->tpages;
+	g_malloc->tpages_tail->next = new_page;
+	g_malloc->tpages_tail = g_malloc->tpages_tail->next;
+	++g_malloc->tpages;
 }
 
 static void		fill_small_page(void *new_page)
@@ -50,25 +66,25 @@ static void		fill_small_page(void *new_page)
 	void					*cur;
 	unsigned int			i;
 
-	new_aheader = (s_tsAllocHeader)cur;
+	new_aheader = (struct s_tsAllocHeader)cur;
 	new_aheader->used = 0;
 	new_aheader->next = 0;
-	cur = cur + SMALL_ALLOC_SIZE;
-	i = N_SMALL_ALLOCS_ON_PAGE - 1;
+	cur = cur + TS_ALOC_HEADR_SIZ + SML_ALOC_SIZ;
+	i = N_SML_ALOCS_PER_PG - 1;
 	while (i > 0)
 	{
 		new_aheader->next_free = cur;
-		new_aheader = (s_tsAllocHeader)cur;
+		new_aheader = (struct s_tsAllocHeader)cur;
 		new_aheader->used = 0;
 		new_aheader->next = 0;
-		malloc_info->free_sallocs_tail->next = new_aheader;
-		malloc_info->free_sallocs_tail = malloc_info->free_sallocs_tail->next;
-		cur = cur + SMALL_ALLOC_SIZE;
+		g_malloc->free_sallocs_tail->next = new_aheader;
+		g_malloc->free_sallocs_tail = g_malloc->free_sallocs_tail->next;
+		cur = cur + TS_ALOC_HEADR_SIZ + SML_ALOC_SIZ;
 		--i;
 	}
-	malloc_info->spages_tail->next = new_page;
-	malloc_info->spages_tail = malloc_info->spages_tail->next;
-	++malloc_info->spages;
+	g_malloc->spages_tail->next = new_page;
+	g_malloc->spages_tail = g_malloc->spages_tail->next;
+	++g_malloc->spages;
 }
 
 void			*make_ts_page(unsigned int zone)
@@ -76,18 +92,24 @@ void			*make_ts_page(unsigned int zone)
 	void					*new_page;
 	struct s_tsPageHeader	*new_pheader;
 
-	new_page = mmap(malloc_info->pagesize);
+	new_page = mmap(g_malloc->pagesize);
 	if (!new_page)
-		return (ERROR);
-	new_pheader = (s_tsPageHeader)new_page;
+		return (0);
+	new_pheader = (struct s_tsPageHeader)new_page;
 	new_pheader->nfree = 0;
 	new_pheader->next_page = 0;
-	new_pheader->start_addr = new_page +
-			sizeof(struct s_tsAllocHeader) + sizeof(struct s_tsPageHeader);
 	if (zone == TINY)
+	{
+		new_pheader->start_addr = new_page +
+				TS_PG_HEADR_SIZE + TNY_PG_PAD + TS_ALOC_HEADR_SIZ;
 		fill_tiny_page(new_page);
+	{
 	else
+	{
+		new_pheader->start_addr = new_page +
+				TS_PG_HEADR_SIZE + SML_PG_PAD + TS_ALOC_HEADR_SIZ;
 		fill_small_page(new_page);
+	}
 	return (new_page);
 }
 
@@ -106,9 +128,9 @@ void		setup_malloc(void)
 		make_ts_page(SMALL);
 		--i;
 	}
-	malloc_info->pagesize = getpagesize();
-	malloc_info->lallocs = 0;
-	malloc_info->lallocs_tail = 0;
-	malloc_info->ntpages = NPAGES_OVERHEAD;
-	malloc_info->nspages = NPAGES_OVERHEAD;
+	g_malloc->pagesize = getpagesize();
+	g_malloc->lallocs = 0;
+	g_malloc->lallocs_tail = 0;
+	g_malloc->ntpages = NPAGES_OVERHEAD;
+	g_malloc->nspages = NPAGES_OVERHEAD;
 }

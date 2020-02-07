@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   realloc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/06 17:51:23 by rreedy            #+#    #+#             */
+/*   Updated: 2020/02/06 17:51:34 by rreedy           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "malloc.h"
-#include "ft_printf.h"
+#include "struct_tsAllocHeader.h"
+#include "struct_lAllocHeader.h"
 #include <stddef.h>
-#include <stdlib.h>
 
 void	*ft_realloc(void *ptr, size_t new_size)
 {
@@ -23,7 +35,7 @@ void	*ft_realloc(void *ptr, size_t new_size)
 	}
 	else if (zone == LARGE && new_size >= LARGE_ALLOC_SiZE)
 	{
-		((struct s_tsAllocHeader)(header))->used = new_size;
+		((struct s_lAllocHeader)(header))->used = new_size;
 		new_ptr = ptr;
 	}
 	else if (zone)

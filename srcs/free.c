@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/06 17:52:38 by rreedy            #+#    #+#             */
+/*   Updated: 2020/02/06 17:54:41 by rreedy           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "malloc.h"
-#include "ft_printf.h"
-#include <stddef.h>
-#include <stdlib.h>
+#include "struct_tsPageHeader.h"
+#include "struct_tsAllocHeader.h"
+#include "struct_lAllocHeader.h"
 
 static void		free_tiny(struct s_tsAllocHeader *header)
 {
@@ -16,8 +28,9 @@ static void		free_tiny(struct s_tsAllocHeader *header)
 		malloc_info->free_tallocs_tail->next = header;
 		malloc_info->free_tallocs_tail = malloc_info->free_tallocs_tail->next;
 	}
-//	for if unmapping needs to happen -> else if ()
 }
+
+//	for if unmapping needs to happen -> else if ()
 
 static void		free_small(struct s_tsAllocHeader *header)
 {
