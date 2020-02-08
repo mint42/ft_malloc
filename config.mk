@@ -16,24 +16,16 @@ endif
 
 NAME := libft_malloc_$(HOSTTYPE).so
 
-LIBFT_NAME := libft.a
-LIBFT_DIR := ./libft
-LIBFT_MAKEFILE := Makefile
-LIBS := ft
-LIB_DIRS := $(LIBFT_DIR)
-LIB_INCLUDE_DIRS := $(LIBFT_DIR)/includes
-LIB_INCLUDE_DIRS += $(LIBFT_DIR)/includes/ft_printf
-
-SRC_DIRS := ./srcs
-SRC_DIRS += ./srcs/actions
-INCLUDE_DIRS := ./includes
+SRC_DIR := ./srcs
+INCLUDE_DIR := ./includes
 
 CC := gcc
 CFLAGS := -g
 CFLAGS += -Wall
 CFLAGS += -Wextra
 CFLAGS += -Werror
-CFLAGS += $(foreach include,$(INCLUDE_DIRS),-I$(include))
-CFLAGS += $(foreach lib_include,$(LIB_INCLUDE_DIRS),-I$(lib_include))
-LDFLAGS := $(foreach local_lib_dirs,$(LIB_DIRS),-L$(local_lib_dirs))
-LDFLAGS += $(foreach lib,$(LIBS),-l$(lib))
+CFLAGS += -I$(INCLUDE_DIR)
+CFLAGS += -fPIC
+
+TEST := test_main
+LDFLAGS := -shared

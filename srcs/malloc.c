@@ -15,7 +15,7 @@
 #include "struct_lAllocHeader.h"
 #include <stddef.h>
 
-void			*ft_malloc(size_t size)
+void			*malloc(size_t size)
 {
 	void	*ptr;
 

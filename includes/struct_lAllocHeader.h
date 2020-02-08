@@ -22,13 +22,13 @@
 **	(All large allocations are 1+ pages.)
 */
 
-struct				s_lAllocHeader
+struct						s_lAllocHeader
 {
-	size_t			used;
-	size_t			size;
-	size_t			start_addr;
-	s_lAllocHeader	*prev_alloc;
-	s_lAllocHeader	*next_alloc;
+	void					*start_addr;
+	size_t					used;
+	size_t					size;
+	struct s_lAllocHeader	*prev_alloc;
+	struct s_lAllocHeader	*next_alloc;
 };
 
 #endif

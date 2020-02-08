@@ -20,11 +20,11 @@
 **	Stored at the very front of tiny and small pages to link them together.
 */
 
-struct					s_tsPageHeader
+struct						s_tsPageHeader
 {
-	size_t				start_addr;
-	unsigned short		nused;
-	s_tsPageHeader		*next_page;
+	void					*start_addr;
+	unsigned short			nallocs;
+	struct s_tsPageHeader	*next_page;
 };
 
 #endif

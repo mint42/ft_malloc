@@ -14,21 +14,18 @@
 #include "struct_tsPageHeader.h"
 #include "struct_tsAllocHeader.h"
 #include "struct_lAllocHeader.h"
+#include <stddef.h>
 
 static void		*check_tiny(void *ptr)
 {
 	struct s_tsPageHeader	*cur;
-	unsigned int			i;
 
-	cur = g_malloc->tallocs;
-	i = 0;
-	while (i < N_TNY_ALOCS_PER_PG)
+	cur = g_malloc->tpages;
+	while (cur)
 	{
 		if (ptr >= cur->start_addr && ptr <= cur->start_addr + TNY_PG_SPACE)
-			return (cur[ptr - (TNY_ALOC_SIZ % ptr) - TS_ALOC_HEADR_SIZ]);
-		++i;
-		cur = cur->next;
-
+			return (cur->start_addr + ((size_t)ptr - (TNY_ALOC_SIZ % (size_t)ptr) - TS_ALOC_HEADR_SIZ));
+		cur = cur->next_page;
 	}
 	return (0);
 }
@@ -36,17 +33,13 @@ static void		*check_tiny(void *ptr)
 static void		*check_small(void *ptr)
 {
 	struct s_tsPageHeader	*cur;
-	unsigned int			i;
 
-	cur = malloc_info->sallocs;
-	i = 0;
-	while (i < N_SML_ALOCS_PER_PG)
+	cur = g_malloc->spages;
+	while (cur)
 	{
 		if (ptr >= cur->start_addr && ptr <= cur->start_addr + SML_PG_SPACE)
-			return (cur[ptr - (SML_ALOC_SIZ % ptr) - TS_ALOC_HEADR_SIZ]);
-		++i;
-		cur = cur->next;
-
+			return (cur->start_addr + ((size_t)ptr - (SML_ALOC_SIZ % (size_t)ptr) - TS_ALOC_HEADR_SIZ));
+		cur = cur->next_page;
 	}
 	return (0);
 }
@@ -55,12 +48,12 @@ static void		*check_large(void *ptr)
 {
 	struct s_lAllocHeader	*cur;
 
-	cur = malloc_info->lallocs;
+	cur = g_malloc->lallocs;
 	while (cur)
 	{
 		if (ptr >= cur->start_addr && ptr <= cur->start_addr + cur->size)
-			return (cur[ptr - (cur->size % ptr) - LRG_ALOC_HEADR_SIZ]);
-		cur = cur->next;
+			return (cur->start_addr + ((size_t)ptr - (cur->size % (size_t)ptr) - LRG_ALOC_HEADR_SIZ));
+		cur = cur->next_alloc;
 	}
 	return (0);
 }
@@ -76,6 +69,6 @@ unsigned int	find_header(void *ptr, void *header)
 		return (SMALL);
 	header = check_large(ptr);
 	if (header)
-		return (LARGE)
-	return (0)
+		return (LARGE);
+	return (0);
 }

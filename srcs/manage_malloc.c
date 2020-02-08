@@ -11,10 +11,13 @@
 /* ************************************************************************** */
 
 #include "malloc.h"
+#include "mem.h"
 #include "struct_tsPageHeader.h"
 #include "struct_tsAllocHeader.h"
 #include "struct_lAllocHeader.h"
+#include <sys/mman.h>
 #include <stddef.h>
+#include <unistd.h>
 
 void		*make_large_alloc(size_t used_size)
 {
@@ -23,23 +26,24 @@ void		*make_large_alloc(size_t used_size)
 
 	new_header->used = used_size;
 	new_header->size = (used_size / g_malloc->pagesize) + g_malloc->pagesize;
-	new_alloc = mmap(new_header.size);
+	new_alloc = mmap(0, new_header->size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, new_header->size);
 	if (!new_alloc)
 		return (0);
 	new_header->start_addr = new_alloc + LRG_ALOC_HEADR_SIZ;
-	ft_memcpy(new_alloc, new_header);
-	new_header->prev_alloc = g_malloc.lAlloc_tail->next_alloc;
+	cpy_mem(new_alloc, new_header, LRG_ALOC_HEADR_SIZ);
+	new_header->prev_alloc = g_malloc->lallocs_tail->next_alloc;
 	new_header->next_alloc = 0;
 	return (new_alloc);
 }
 
 static void			fill_tiny_page(void *new_page)
 {
-	struct s_tsPageHeader	*new_aheader;
+	struct s_tsAllocHeader	*new_aheader;
 	void					*cur;
 	unsigned int			i;
 
-	new_aheader = (struct s_tsAllocHeader)cur;
+	cur = new_page;
+	new_aheader = (struct s_tsAllocHeader *)cur;
 	new_aheader->used = 0;
 	new_aheader->next = 0;
 	cur = cur + TS_ALOC_HEADR_SIZ + TNY_ALOC_SIZ;
@@ -62,13 +66,14 @@ static void			fill_tiny_page(void *new_page)
 
 static void		fill_small_page(void *new_page)
 {
-	struct s_tsPageHeader	*new_aheader;
+	struct s_tsAllocHeader	*new_aheader;
 	void					*cur;
 	unsigned int			i;
 
+	cur = new_page;
 	new_aheader = (struct s_tsAllocHeader)cur;
 	new_aheader->used = 0;
-	new_aheader->next = 0;
+	new_aheader->next_free = 0;
 	cur = cur + TS_ALOC_HEADR_SIZ + SML_ALOC_SIZ;
 	i = N_SML_ALOCS_PER_PG - 1;
 	while (i > 0)
@@ -76,7 +81,7 @@ static void		fill_small_page(void *new_page)
 		new_aheader->next_free = cur;
 		new_aheader = (struct s_tsAllocHeader)cur;
 		new_aheader->used = 0;
-		new_aheader->next = 0;
+		new_aheader->next_free = 0;
 		g_malloc->free_sallocs_tail->next = new_aheader;
 		g_malloc->free_sallocs_tail = g_malloc->free_sallocs_tail->next;
 		cur = cur + TS_ALOC_HEADR_SIZ + SML_ALOC_SIZ;
@@ -92,7 +97,7 @@ void			*make_ts_page(unsigned int zone)
 	void					*new_page;
 	struct s_tsPageHeader	*new_pheader;
 
-	new_page = mmap(g_malloc->pagesize);
+	new_page = mmap(0, g_malloc->pagesize, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, new_header->size);
 	if (!new_page)
 		return (0);
 	new_pheader = (struct s_tsPageHeader)new_page;
@@ -101,13 +106,12 @@ void			*make_ts_page(unsigned int zone)
 	if (zone == TINY)
 	{
 		new_pheader->start_addr = new_page +
-				TS_PG_HEADR_SIZE + TNY_PG_PAD + TS_ALOC_HEADR_SIZ;
+				TS_PG_HEADR_SIZ + TNY_PG_PAD + TS_ALOC_HEADR_SIZ;
 		fill_tiny_page(new_page);
-	{
+	}
 	else
 	{
-		new_pheader->start_addr = new_page +
-				TS_PG_HEADR_SIZE + SML_PG_PAD + TS_ALOC_HEADR_SIZ;
+		new_pheader->start_addr = new_page + TS_PG_HEADR_SIZ + SML_PG_PAD + TS_ALOC_HEADR_SIZ;
 		fill_small_page(new_page);
 	}
 	return (new_page);

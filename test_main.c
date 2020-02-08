@@ -19,13 +19,13 @@
 
 int		main()
 {
-	void	*ptr;
-	size_t	size;
+	void	*str;
 
-	ptr = 0;
-	size = 0;
-	ft_malloc(size);
-	ft_realloc(ptr, size);
-	ft_free(ptr);
+	str = malloc(size);
+	strcpy(str, "test");
+	printf("%s\n", str);
+	realloc(str, 9);
+	strcpy(str, "new test");
+	free(str);
 	return (0);
 }

@@ -27,8 +27,8 @@
 /*
 ** Padding after page header for better alignment of allocations
 */
-# define TNY_PG_HEADR_PAD 4
-# define SML_PG_HEADR_PAD 4
+# define TNY_PG_PAD 4
+# define SML_PG_PAD 4
 
 /*
 **	Allocation size and allocations-per-page is a based on these numbers.
@@ -63,10 +63,10 @@
 **	quick access.
 */
 
-struct				s_tsAllocHeader
+struct							s_tsAllocHeader
 {
-	unsigned short		used;
-	s_tsAllocHeader		*next_free;
+	unsigned short				used;
+	struct s_tsAllocHeader		*next_free;
 };
 
 #endif

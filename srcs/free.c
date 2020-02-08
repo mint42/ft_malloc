@@ -14,19 +14,20 @@
 #include "struct_tsPageHeader.h"
 #include "struct_tsAllocHeader.h"
 #include "struct_lAllocHeader.h"
+#include <sys/mman.h>
 
 static void		free_tiny(struct s_tsAllocHeader *header)
 {
 	struct s_tsPageHeader	*page_header;
 
-	page_header = header - (malloc_info->pagesize & (void *)header);
-	if (page_header->nused == 1 && malloc_info->tpages > NPAGES_OVERHEAD)
-		munmap(page_header);
+	page_header = (struct s_tsPageHeader *)(header - (g_malloc->pagesize & (size_t)header));
+	if (page_header->nallocs == 1 && g_malloc->ntpages > NPAGES_OVERHEAD)
+		munmap(page_header, g_malloc->pagesize);
 	else
 	{
-		--page_header->nfree;
-		malloc_info->free_tallocs_tail->next = header;
-		malloc_info->free_tallocs_tail = malloc_info->free_tallocs_tail->next;
+		--page_header->nallocs;
+		g_malloc->free_tallocs_tail->next_free = header;
+		g_malloc->free_tallocs_tail = g_malloc->free_tallocs_tail->next_free;
 	}
 }
 
@@ -36,35 +37,36 @@ static void		free_small(struct s_tsAllocHeader *header)
 {
 	struct s_tsPageHeader	*page_header;
 
-	page_header = header - (malloc_info->pagesize & (void *)header);
-	if (page_header->nused == 1 && malloc_info->spages > NPAGES_OVERHEAD)
-		munmap(page_header);
+	page_header = (struct s_tsPageHeader *)(header - (g_malloc->pagesize & (size_t)header));
+	if (page_header->nallocs == 1 && g_malloc->nspages > NPAGES_OVERHEAD)
+		munmap(page_header, g_malloc->pagesize);
 	else
 	{
-		--page_header->nfree;
-		malloc_info->free_sallocs_tail->next = header;
-		malloc_info->free_sallocs_tail = malloc_info->free_sallocs_tail->next;
+		--page_header->nallocs;
+		g_malloc->free_sallocs_tail->next_free = header;
+		g_malloc->free_sallocs_tail = g_malloc->free_sallocs_tail->next_free;
 	}
 }
 
 static void		free_large(struct s_lAllocHeader *header)
 {
-	struct s_lAllocHeader	prev;
+	struct s_lAllocHeader	*prev;
 
 	prev = header->prev_alloc;
 	if (!prev)
-		malloc_info->lallocs = malloc_info->lallocs->next;
+		g_malloc->lallocs = g_malloc->lallocs->next_alloc;
 	else
 		prev->next_alloc = header->next_alloc;
-	munmap(header);
+	munmap(header, header->size);
 }
 
-void			ft_free(void *ptr)
+void			free(void *ptr)
 {
 	void			*header;
 	unsigned int	zone;
 
-	zone = find_alloc(ptr, header);
+	header = 0;
+	zone = find_header(ptr, header);
 	if (zone == TINY)
 		free_tiny(header);
 	else if (zone == SMALL)

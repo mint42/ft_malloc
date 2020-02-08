@@ -23,20 +23,21 @@
 **	a "stack" of free-for-use spaces
 */
 
-struct					g_malloc
+struct						g_malloc
 {
-	s_tsPageHeader		*tpages;
-	s_tsPageHeader		*tpages_tail;
-	s_tsPageHeader		*spages;
-	s_tsPageHeader		*spages_tail;
-	s_lAllocHeader		*lallocs;
-	s_lAllocHeader		*lallocs_tail;
-	s_tsAllocHeader		*free_tallocs;
-	s_tsAllocHeader		*free_tallocs_tail;
-	s_tsAllocHeader		*free_sallocs;
-	s_tsAllocHeader		*free_sallocs_tail;
-	size_t				ntpages;
-	size_t				nspages;
+	struct s_tsPageHeader	*tpages;
+	struct s_tsPageHeader	*tpages_tail;
+	struct s_tsPageHeader	*spages;
+	struct s_tsPageHeader	*spages_tail;
+	struct s_lAllocHeader	*lallocs;
+	struct s_lAllocHeader	*lallocs_tail;
+	struct s_tsAllocHeader	*free_tallocs;
+	struct s_tsAllocHeader	*free_tallocs_tail;
+	struct s_tsAllocHeader	*free_sallocs;
+	struct s_tsAllocHeader	*free_sallocs_tail;
+	size_t					ntpages;
+	size_t					nspages;
+	size_t					pagesize;
 };
 
 #endif
