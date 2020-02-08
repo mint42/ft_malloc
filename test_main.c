@@ -20,11 +20,11 @@
 
 int		main()
 {
-	void	*str;
+	char	*str;
 
 	str = malloc(5);
 	strcpy(str, "test");
-	printf("%s\n", str);
+	printf("%s\n", (char  *)str);
 	realloc(str, 9);
 	strcpy(str, "new test");
 	free(str);
