@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:51:42 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/06 17:52:29 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/08 00:55:26 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +19,23 @@ void			*malloc(size_t size)
 {
 	void	*ptr;
 
-	if (!malloc_info)
+	if (!g_malloc)
 		setup_malloc();
 	if (size <= TNY_ALOC_SIZ)
 	{
-		if (!malloc_info.free_talloc)
+		if (!g_malloc->free_tallocs)
 			make_ts_page(TINY);
-		ptr = malloc_info->free_talloc;
-		malloc_info->free_talloc = malloc_info->free_talloc_next;
-		((struct s_tsAllocHeader)(ptr))->used = size;
+		ptr = g_malloc->free_tallocs;
+		g_malloc->free_tallocs = g_malloc->free_tallocs->next_free;
+		((struct s_tsAllocHeader *)(ptr))->used = size;
 	}
 	else if (size <= SML_ALOC_SIZ)
 	{
-		if (!malloc_info.free_salloc)
+		if (!g_malloc->free_sallocs)
 			make_ts_page(SMALL);
-		ptr = malloc_info->free_salloc;
-		malloc_info->free_salloc = malloc_info->free_salloc_next;
-		((struct s_tsAllocHeader)(ptr))->used = size;
+		ptr = g_malloc->free_sallocs;
+		g_malloc->free_sallocs = g_malloc->free_sallocs->next_free;
+		((struct s_tsAllocHeader *)(ptr))->used = size;
 	}
 	else
 		ptr = make_large_alloc(size);

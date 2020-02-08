@@ -16,8 +16,13 @@ void			*malloc(size_t size);
 void			*realloc(void *ptr, size_t size);
 void			free(void *ptr);
 
-void			*make_ts_page(unsigned int zone);
+/*
+**	Manage Malloc
+*/
+
 void			setup_malloc(void);
+void			*make_ts_page(unsigned int zone);
+void			*make_large_alloc(size_t used_size);
 unsigned int	find_header(void *ptr, void *header);
 
 #endif
