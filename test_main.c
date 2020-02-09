@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/02 00:36:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/08 01:20:05 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/08 13:37:51 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,11 @@
 #include <string.h>
 #include <stddef.h>
 #include <stdio.h>
+
+// tests:
+// run leaks to see if need to unmap pages
+// run free first to see if segfault and need to init malloc from any of them
+//
 
 int		main()
 {

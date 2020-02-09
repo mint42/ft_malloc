@@ -21,8 +21,8 @@ void			free(void *ptr);
 */
 
 void			setup_malloc(void);
-void			*make_ts_page(unsigned int zone);
-void			*make_large_alloc(size_t used_size);
+void			add_ts_page(unsigned int zone);
+void			add_large_alloc(size_t used_size);
 unsigned int	find_header(void *ptr, void *header);
 
 #endif

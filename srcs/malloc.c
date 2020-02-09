@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:51:42 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/08 00:55:26 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/08 15:56:08 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void			*malloc(size_t size)
 	if (size <= TNY_ALOC_SIZ)
 	{
 		if (!g_malloc->free_tallocs)
-			make_ts_page(TINY);
+			add_ts_page(TINY);
 		ptr = g_malloc->free_tallocs;
 		g_malloc->free_tallocs = g_malloc->free_tallocs->next_free;
 		((struct s_tsAllocHeader *)(ptr))->used = size;
@@ -32,12 +32,15 @@ void			*malloc(size_t size)
 	else if (size <= SML_ALOC_SIZ)
 	{
 		if (!g_malloc->free_sallocs)
-			make_ts_page(SMALL);
+			add_ts_page(SMALL);
 		ptr = g_malloc->free_sallocs;
 		g_malloc->free_sallocs = g_malloc->free_sallocs->next_free;
 		((struct s_tsAllocHeader *)(ptr))->used = size;
 	}
 	else
-		ptr = make_large_alloc(size);
+	{
+		add_large_alloc(size);
+		ptr = g_malloc->lallocs;
+	}
 	return (ptr);
 }
