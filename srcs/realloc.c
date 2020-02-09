@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:51:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/07 07:54:40 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/09 01:39:04 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ void	*realloc(void *ptr, size_t new_size)
 	new_ptr = 0;
 	header = 0;
 	zone = find_header(ptr, header);
-	if ((zone == TINY && new_size >= TNY_ALOC_SIZ) ||
-		(zone == SMALL && new_size >= SML_ALOC_SIZ))
+	if ((zone == TINY && new_size >= TNY_ALLOC_SIZE) ||
+		(zone == SMALL && new_size >= SML_ALLOC_SIZE))
 	{
 		((struct s_tsAllocHeader *)(header))->used = new_size;
 		new_ptr = ptr;

@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:51:42 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/08 15:56:08 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/09 01:37:43 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,28 +19,28 @@ void			*malloc(size_t size)
 {
 	void	*ptr;
 
-	if (!g_malloc)
+	if (!info)
 		setup_malloc();
-	if (size <= TNY_ALOC_SIZ)
+	if (size <= TNY_ALLOC_SIZE)
 	{
-		if (!g_malloc->free_tallocs)
+		if (!info->free_tallocs)
 			add_ts_page(TINY);
-		ptr = g_malloc->free_tallocs;
-		g_malloc->free_tallocs = g_malloc->free_tallocs->next_free;
+		ptr = info->free_tallocs;
+		info->free_tallocs = info->free_tallocs->next_free;
 		((struct s_tsAllocHeader *)(ptr))->used = size;
 	}
-	else if (size <= SML_ALOC_SIZ)
+	else if (size <= SML_ALLOC_SIZE)
 	{
-		if (!g_malloc->free_sallocs)
+		if (!info->free_sallocs)
 			add_ts_page(SMALL);
-		ptr = g_malloc->free_sallocs;
-		g_malloc->free_sallocs = g_malloc->free_sallocs->next_free;
+		ptr = info->free_sallocs;
+		info->free_sallocs = info->free_sallocs->next_free;
 		((struct s_tsAllocHeader *)(ptr))->used = size;
 	}
 	else
 	{
 		add_large_alloc(size);
-		ptr = g_malloc->lallocs;
+		ptr = info->lallocs;
 	}
 	return (ptr);
 }

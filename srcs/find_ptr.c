@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:22:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/06 17:54:41 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/09 01:38:14 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,17 @@
 #include "struct_lAllocHeader.h"
 #include <stddef.h>
 
+// TODO: consider when trying to access pointer that is inside of a header??
+
 static void		*check_tiny(void *ptr)
 {
 	struct s_tsPageHeader	*cur;
 
-	cur = g_malloc->tpages;
+	cur = info->tpages;
 	while (cur)
 	{
-		if (ptr >= cur->start_addr && ptr <= cur->start_addr + TNY_PG_SPACE)
-			return (cur->start_addr + ((size_t)ptr - (TNY_ALOC_SIZ % (size_t)ptr) - TS_ALOC_HEADR_SIZ));
+		if ((size_t)ptr >= (size_t)cur + TNY_PG_OFSET && (size_t)ptr <= (size_t)cur + PAGESIZE && TNY_PG_SPACE % (size_t)ptr >= TS_ALHEADR_SIZ)
+			return (ptr - ((TNY_ALLOC_SIZE % (size_t)ptr) - TS_ALHEADR_SIZ));
 		cur = cur->next_page;
 	}
 	return (0);
@@ -34,11 +36,11 @@ static void		*check_small(void *ptr)
 {
 	struct s_tsPageHeader	*cur;
 
-	cur = g_malloc->spages;
+	cur = info->tpages;
 	while (cur)
 	{
-		if (ptr >= cur->start_addr && ptr <= cur->start_addr + SML_PG_SPACE)
-			return (cur->start_addr + ((size_t)ptr - (SML_ALOC_SIZ % (size_t)ptr) - TS_ALOC_HEADR_SIZ));
+		if ((size_t)ptr >= (size_t)cur + SML_PG_OFSET && (size_t)ptr <= (size_t)cur + PAGESIZE && SML_PG_SPACE % (size_t)ptr >= TS_ALHEADR_SIZ)
+			return (ptr - ((SML_ALLOC_SIZE % (size_t)ptr) - TS_ALHEADR_SIZ));
 		cur = cur->next_page;
 	}
 	return (0);
@@ -48,11 +50,11 @@ static void		*check_large(void *ptr)
 {
 	struct s_lAllocHeader	*cur;
 
-	cur = g_malloc->lallocs;
+	cur = info->lallocs;
 	while (cur)
 	{
-		if (ptr >= cur->start_addr && ptr <= cur->start_addr + cur->size)
-			return (cur->start_addr + ((size_t)ptr - (cur->size % (size_t)ptr) - LRG_ALOC_HEADR_SIZ));
+		if ((size_t)ptr >= (size_t)cur + LRG_ALHEADR_SIZ && (size_t)ptr <= (size_t)cur + cur->size)
+			return (ptr - ((cur->size % (size_t)ptr) - LRG_ALHEADR_SIZ));
 		cur = cur->next_alloc;
 	}
 	return (0);

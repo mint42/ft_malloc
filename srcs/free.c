@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:52:38 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/06 17:54:41 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/09 01:36:49 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,14 @@ static void		free_tiny(struct s_tsAllocHeader *header)
 {
 	struct s_tsPageHeader	*page_header;
 
-	page_header = (struct s_tsPageHeader *)(header - (g_malloc->pagesize & (size_t)header));
-	if (page_header->nallocs == 1 && g_malloc->ntpages > NPAGES_OVERHEAD)
-		munmap(page_header, g_malloc->pagesize);
+	page_header = (struct s_tsPageHeader *)(header - (info->pagesize & (size_t)header));
+	if (page_header->nallocs == 1 && info->ntpages > NPAGES_OVERHEAD)
+		munmap(page_header, info->pagesize);
 	else
 	{
 		--page_header->nallocs;
-		g_malloc->free_tallocs_tail->next_free = header;
-		g_malloc->free_tallocs_tail = g_malloc->free_tallocs_tail->next_free;
+		info->free_tallocs_tail->next_free = header;
+		info->free_tallocs_tail = info->free_tallocs_tail->next_free;
 	}
 }
 
@@ -37,14 +37,14 @@ static void		free_small(struct s_tsAllocHeader *header)
 {
 	struct s_tsPageHeader	*page_header;
 
-	page_header = (struct s_tsPageHeader *)(header - (g_malloc->pagesize & (size_t)header));
-	if (page_header->nallocs == 1 && g_malloc->nspages > NPAGES_OVERHEAD)
-		munmap(page_header, g_malloc->pagesize);
+	page_header = (struct s_tsPageHeader *)(header - (info->pagesize & (size_t)header));
+	if (page_header->nallocs == 1 && info->nspages > NPAGES_OVERHEAD)
+		munmap(page_header, info->pagesize);
 	else
 	{
 		--page_header->nallocs;
-		g_malloc->free_sallocs_tail->next_free = header;
-		g_malloc->free_sallocs_tail = g_malloc->free_sallocs_tail->next_free;
+		info->free_sallocs_tail->next_free = header;
+		info->free_sallocs_tail = info->free_sallocs_tail->next_free;
 	}
 }
 
@@ -54,7 +54,7 @@ static void		free_large(struct s_lAllocHeader *header)
 
 	prev = header->prev_alloc;
 	if (!prev)
-		g_malloc->lallocs = g_malloc->lallocs->next_alloc;
+		info->lallocs = info->lallocs->next_alloc;
 	else
 		prev->next_alloc = header->next_alloc;
 	munmap(header, header->size);
