@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 18:47:57 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/09 01:38:02 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/09 03:12:33 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@
 
 /*
 **	:)		CONFIGURE:
-*/
-/*
+**
 **	TNY_ALLOC_SIZ	-> size of a tiny allocation
 **	SML_ALLOC_SIZ	-> size of a small allocation
 **	NPAGES_OVRHEAD	-> How many pages of memory will be kept as a buffer
@@ -30,13 +29,11 @@
 
 /*
 **	>:(		DO NOT CONFIGURE:
-*/
-/*
+**
 **	*_PG_PAD	-> Padding will be needed to align the allocations evenly
 **	*_PG_SPACE	-> How much of the page is free for the allocations considering
 **                 getpagesize(), the tiny/small page header size, and padding
 */
-//# define PAGESIZE getpagesize()
 # define PAGESIZE 4096
 # define TNY_PG_PAD ((PAGESIZE - TS_PGHEADR_SIZ) % (TNY_ALLOC_SIZE + TS_ALHEADR_SIZ))
 # define SML_PG_PAD ((PAGESIZE - TS_PGHEADR_SIZ) % (SML_ALLOC_SIZE + TS_ALHEADR_SIZ))
