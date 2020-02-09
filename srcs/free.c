@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:52:38 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/09 01:36:49 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/09 04:33:40 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,13 @@
 #include "struct_tsAllocHeader.h"
 #include "struct_lAllocHeader.h"
 #include <sys/mman.h>
+#include <unistd.h>
 
 static void		free_tiny(struct s_tsAllocHeader *header)
 {
 	struct s_tsPageHeader	*page_header;
 
-	page_header = (struct s_tsPageHeader *)(header - (info->pagesize & (size_t)header));
+	page_header = (struct s_tsPageHeader *)((uintptr_t)header - (info->pagesize % (uintptr_t)header));
 	if (page_header->nallocs == 1 && info->ntpages > NPAGES_OVERHEAD)
 		munmap(page_header, info->pagesize);
 	else
@@ -37,7 +38,7 @@ static void		free_small(struct s_tsAllocHeader *header)
 {
 	struct s_tsPageHeader	*page_header;
 
-	page_header = (struct s_tsPageHeader *)(header - (info->pagesize & (size_t)header));
+	page_header = (struct s_tsPageHeader *)((uintptr_t)header - (info->pagesize % (uintptr_t)header));
 	if (page_header->nallocs == 1 && info->nspages > NPAGES_OVERHEAD)
 		munmap(page_header, info->pagesize);
 	else

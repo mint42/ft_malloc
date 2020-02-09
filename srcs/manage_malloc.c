@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:38:09 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/09 01:38:48 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/09 04:38:04 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static void			add_tiny_page(void *new_page)
 		info->tpages = (struct s_tsPageHeader *)new_page;
 	else
 		info->tpages_tail->next_page = (struct s_tsPageHeader *)new_page;
-	new_header = (struct s_tsAllocHeader *)(new_page + TNY_PG_OFSET);
+	new_header = (struct s_tsAllocHeader *)((uintptr_t)new_page + TNY_PG_OFSET);
 	if (!info->free_tallocs)
 		info->free_tallocs = new_header;
 	else
@@ -57,7 +57,7 @@ static void			add_tiny_page(void *new_page)
 	i = 1;
 	while (i < N_TNY_ALOCS_PER_PG)
 	{
-		new_header->next_free = new_header + TS_ALHEADR_SIZ + TNY_ALLOC_SIZE;
+		new_header->next_free = (struct s_tsAllocHeader *)((uintptr_t)new_header + TS_ALHEADR_SIZ + TNY_ALLOC_SIZE);
 		new_header = new_header->next_free;
 		new_header->used = 0;
 		new_header->next_free = 0;
@@ -83,7 +83,7 @@ static void		add_small_page(void *new_page)
 		info->spages = (struct s_tsPageHeader *)new_page;
 	else
 		info->spages_tail->next_page = (struct s_tsPageHeader *)new_page;
-	new_header = (struct s_tsAllocHeader *)(new_page + SML_PG_OFSET);
+	new_header = (struct s_tsAllocHeader *)((uintptr_t)new_page + SML_PG_OFSET);
 	if (!info->free_sallocs)
 		info->free_sallocs = new_header;
 	else
@@ -93,7 +93,7 @@ static void		add_small_page(void *new_page)
 	i = 1;
 	while (i < N_SML_ALOCS_PER_PG)
 	{
-		new_header->next_free = new_header + TS_ALHEADR_SIZ + SML_ALLOC_SIZE;
+		new_header->next_free = (struct s_tsAllocHeader *)((uintptr_t)new_header + TS_ALHEADR_SIZ + SML_ALLOC_SIZE);
 		new_header = new_header->next_free;
 		new_header->used = 0;
 		new_header->next_free = 0;
@@ -116,15 +116,9 @@ void		add_ts_page(unsigned int zone)
 	new_pheader->nallocs = 0;
 	new_pheader->next_page = 0;
 	if (zone == TINY)
-	{
-		new_pheader->start_addr = new_page + TNY_PG_OFSET;
 		add_tiny_page(new_page);
-	}
 	else
-	{
-		new_pheader->start_addr = new_page + SML_PG_OFSET;
 		add_small_page(new_page);
-	}
 }
 
 void		setup_malloc(void)

@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/02 00:36:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/08 13:37:51 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/09 04:36:14 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int		main()
 	printf("%s\n", (char  *)str);
 	realloc(str, 9);
 	strcpy(str, "new test");
+	printf("%s\n", (char  *)str);
 	free(str);
 	return (0);
 }

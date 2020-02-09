@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:51:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/09 01:39:04 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/09 04:31:19 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ void	*realloc(void *ptr, size_t new_size)
 	new_ptr = 0;
 	header = 0;
 	zone = find_header(ptr, header);
-	if ((zone == TINY && new_size >= TNY_ALLOC_SIZE) ||
-		(zone == SMALL && new_size >= SML_ALLOC_SIZE))
+	if ((zone == TINY && new_size >= TNY_ALLOC_SIZE) || (zone == SMALL && new_size >= SML_ALLOC_SIZE))
 	{
 		((struct s_tsAllocHeader *)(header))->used = new_size;
 		new_ptr = ptr;
@@ -42,8 +41,7 @@ void	*realloc(void *ptr, size_t new_size)
 	else if (zone)
 	{
 		new_ptr = malloc(new_size);
-		old_size = (zone & (TINY | SMALL)) ? ((struct s_tsAllocHeader *)(header))->used :
-				((struct s_lAllocHeader *)(header))->used;
+		old_size = (zone & (TINY | SMALL)) ? ((struct s_tsAllocHeader *)(header))->used : ((struct s_lAllocHeader *)(header))->used;
 		cpy_mem(new_ptr, ptr, old_size);
 		free(ptr);
 	}
