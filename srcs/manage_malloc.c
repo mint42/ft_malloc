@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:38:09 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/09 04:38:04 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/10 17:33:59 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void		add_large_alloc(size_t used_size)
 	void					*new_alloc;
 	size_t					size;
 
-	size = (used_size / info->pagesize) + info->pagesize;
+	size = ((used_size / info->pagesize) + 1) * info->pagesize;
 	new_alloc = mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 	if (!new_alloc)
 		return ;
@@ -33,8 +33,15 @@ void		add_large_alloc(size_t used_size)
 	new_header->size = size;
 	new_header->used = used_size;
 	new_header->prev_alloc = 0;
-	new_header->next_alloc = info->lallocs;
-	info->lallocs->prev_alloc = new_header;
+	if (!info->lallocs)
+	{
+		new_header->next_alloc = 0;
+	}
+	else
+	{
+		info->lallocs->next_allocprev_alloc = new_header;
+		new_header->next_alloc = info->lallocs;
+	}
 	info->lallocs = new_header;
 }
 
