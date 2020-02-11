@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:22:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/09 04:33:19 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/10 16:26:12 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void		*check_tiny(void *ptr)
 	cur = info->tpages;
 	while (cur)
 	{
-		if ((uintptr_t)ptr >= (uintptr_t)cur + TNY_PG_OFSET && (uintptr_t)ptr <= (uintptr_t)cur + PAGESIZE && TNY_PG_SPACE % (uintptr_t)ptr >= TS_ALHEADR_SIZ)
+		if ((uintptr_t)ptr >= (uintptr_t)cur + TNY_PG_OFSET && (uintptr_t)ptr <= (uintptr_t)cur + PAGESIZE && ((uintptr_t)ptr - (uintptr_t)cur) %				TNY_ALLOC_SIZE >= TS_ALHEADR_SIZ)
 			return ((void *)((uintptr_t)ptr - ((TNY_ALLOC_SIZE % (uintptr_t)ptr) - TS_ALHEADR_SIZ)));
 		cur = cur->next_page;
 	}
@@ -40,7 +40,7 @@ static void		*check_small(void *ptr)
 	cur = info->tpages;
 	while (cur)
 	{
-		if ((uintptr_t)ptr >= (uintptr_t)cur + SML_PG_OFSET && (uintptr_t)ptr <= (uintptr_t)cur + PAGESIZE && SML_PG_SPACE % (uintptr_t)ptr >= TS_ALHEADR_SIZ)
+		if ((uintptr_t)ptr >= (uintptr_t)cur + SML_PG_OFSET && (uintptr_t)ptr <= (uintptr_t)cur + PAGESIZE && ((uintptr_t)ptr - (uintptr_t)cur) %				SML_ALLOC_SIZE >= TS_ALHEADR_SIZ)
 			return ((void *)((uintptr_t)ptr - ((SML_ALLOC_SIZE % (uintptr_t)ptr) - TS_ALHEADR_SIZ)));
 		cur = cur->next_page;
 	}

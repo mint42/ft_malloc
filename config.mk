@@ -6,7 +6,7 @@
 #    By: rreedy <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/22 09:39:36 by rreedy            #+#    #+#              #
-#    Updated: 2020/02/08 01:21:46 by rreedy           ###   ########.fr        #
+#    Updated: 2020/02/10 16:36:05 by rreedy           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ ifeq ($(HOSTTYPE),)
 endif
 
 NAME := libft_malloc_$(HOSTTYPE).so
+NAMELINK := libft_malloc.so
 
 SRC_DIR := ./srcs
 INCLUDE_DIR := ./includes
@@ -33,7 +34,7 @@ LNK_OBJ_FLAGS := -shared
 
 TEST := test
 
-LIB := ft_malloc_$(HOSTTYPE)
+LIB := ft_malloc
 LIB_DIR := ./
 
 LDFLAGS := -l$(LIB) -L$(LIB_DIR)
