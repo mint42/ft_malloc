@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:22:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/10 17:11:58 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/13 21:57:29 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 #include "struct_lAllocHeader.h"
 #include <stddef.h>
 #include <unistd.h>
-
-// TODO: consider when trying to access pointer that is inside of a header??
 
 static void		*check_tiny(void *ptr)
 {
