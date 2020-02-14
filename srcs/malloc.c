@@ -6,14 +6,16 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:51:42 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/09 01:37:43 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/14 04:59:57 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
+#include "new_pages.h"
 #include "struct_tsAllocHeader.h"
 #include "struct_lAllocHeader.h"
 #include <stddef.h>
+#include <unistd.h>
 
 void			*malloc(size_t size)
 {
@@ -24,23 +26,23 @@ void			*malloc(size_t size)
 	if (size <= TNY_ALLOC_SIZE)
 	{
 		if (!info->free_tallocs)
-			add_ts_page(TINY);
-		ptr = info->free_tallocs;
+			new_tspage(TINY);
+		ptr = (void *)((uintptr_t)info->free_tallocs + info->ts_alheadr_siz);
 		info->free_tallocs = info->free_tallocs->next_free;
 		((struct s_tsAllocHeader *)(ptr))->used = size;
 	}
 	else if (size <= SML_ALLOC_SIZE)
 	{
 		if (!info->free_sallocs)
-			add_ts_page(SMALL);
-		ptr = info->free_sallocs;
+			new_tspage(SMALL);
+		ptr = (void *)((uintptr_t)info->free_sallocs + info->ts_alheadr_siz);
 		info->free_sallocs = info->free_sallocs->next_free;
 		((struct s_tsAllocHeader *)(ptr))->used = size;
 	}
 	else
 	{
-		add_large_alloc(size);
-		ptr = info->lallocs;
+		new_lpages(size);
+		ptr = (void *)((uintptr_t)info->lallocs + info->lrg_alheadr_siz);
 	}
 	return (ptr);
 }

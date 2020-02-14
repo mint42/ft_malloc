@@ -1,28 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   struct_tsPageHeader.h                              :+:      :+:    :+:   */
+/*   new_pages.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/06 17:07:46 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/13 22:19:17 by rreedy           ###   ########.fr       */
+/*   Created: 2020/02/13 22:09:29 by rreedy            #+#    #+#             */
+/*   Updated: 2020/02/13 22:09:38 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STRUCT_TSPAGEHEADER_H
-# define STRUCT_TSPAGEHEADER_H
+#ifndef NEW_PAGES_H
+# define NEW_PAGES_H
 
-# include <stddef.h>
-
-/*
-**	Linked list of allocated pages.
-**	Stored at the very front of tiny and small pages to link them together.
-*/
-struct						s_tsPageHeader
-{
-	unsigned short			nallocs;
-	struct s_tsPageHeader	*next_page;
-};
+void		new_lpages(size_t used_size);
+void		new_tspage(unsigned int zone);
 
 #endif

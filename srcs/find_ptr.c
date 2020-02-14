@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:22:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/13 21:57:29 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/14 06:33:42 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,10 @@ static void		*check_tiny(void *ptr)
 	cur = info->tpages;
 	while (cur)
 	{
-		if ((uintptr_t)ptr >= (uintptr_t)cur + TNY_PG_OFSET && (uintptr_t)ptr <= (uintptr_t)cur + PAGESIZE && ((uintptr_t)ptr - (uintptr_t)cur) %				TNY_ALLOC_SIZE >= TS_ALHEADR_SIZ)
-			return ((void *)((uintptr_t)ptr - ((TNY_ALLOC_SIZE % (uintptr_t)ptr) - TS_ALHEADR_SIZ)));
+		if ((uintptr_t)ptr >= (uintptr_t)cur + info->tny_pg_offset && (uintptr_t)ptr <= (uintptr_t)cur + info->pagesize && ((uintptr_t)ptr - ((uintptr_t)cur + info->tny_pg_offset)) % (info->ts_alheadr_siz + TNY_ALLOC_SIZE) >= info->ts_alheadr_siz)
+			return ((void *)((uintptr_t)cur + info->tny_pg_offset + ((info->ts_alheadr_siz + TNY_ALLOC_SIZE) *
+					((info->tny_pg_space / ((uintptr_t)ptr - ((uintptr_t)cur + info->tny_pg_offset))) + 1))));
+		//	return ((void *)(((uintptr_t)ptr - (((uintptr_t)ptr - ((uintptr_t)cur + info->tny_pg_offset)) % (info->ts_alheadr_siz + TNY_ALLOC_SIZE))) - info->ts_alheadr_siz));
 		cur = cur->next_page;
 	}
 	return (0);
@@ -38,8 +40,10 @@ static void		*check_small(void *ptr)
 	cur = info->tpages;
 	while (cur)
 	{
-		if ((uintptr_t)ptr >= (uintptr_t)cur + SML_PG_OFSET && (uintptr_t)ptr <= (uintptr_t)cur + PAGESIZE && ((uintptr_t)ptr - (uintptr_t)cur) %				SML_ALLOC_SIZE >= TS_ALHEADR_SIZ)
-			return ((void *)((uintptr_t)ptr - ((SML_ALLOC_SIZE % (uintptr_t)ptr) - TS_ALHEADR_SIZ)));
+		if ((uintptr_t)ptr >= (uintptr_t)cur + info->sml_pg_offset && (uintptr_t)ptr <= (uintptr_t)cur + info->pagesize && ((uintptr_t)ptr - ((uintptr_t)cur + info->sml_pg_offset)) % (info->ts_alheadr_siz + SML_ALLOC_SIZE) >= info->ts_alheadr_siz)
+			return ((void *)((uintptr_t)cur + info->sml_pg_offset + ((info->ts_alheadr_siz + SML_ALLOC_SIZE) *
+					((info->sml_pg_space / ((uintptr_t)ptr - ((uintptr_t)cur + info->sml_pg_offset))) + 1))));
+		//	return ((void *)(((uintptr_t)ptr - (((uintptr_t)ptr - ((uintptr_t)cur + info->sml_pg_offset)) % (info->ts_alheadr_siz + SML_ALLOC_SIZE))) - info->ts_alheadr_siz));
 		cur = cur->next_page;
 	}
 	return (0);
@@ -52,24 +56,24 @@ static void		*check_large(void *ptr)
 	cur = info->lallocs;
 	while (cur)
 	{
-		if ((uintptr_t)ptr >= (uintptr_t)cur + LRG_ALHEADR_SIZ && (uintptr_t)ptr <= (uintptr_t)cur + cur->size)
-			return ((void *)((uintptr_t)ptr - ((cur->size % (uintptr_t)ptr) - LRG_ALHEADR_SIZ)));
+		if ((uintptr_t)ptr >= (uintptr_t)cur + info->lrg_alheadr_siz && (uintptr_t)ptr <= (uintptr_t)cur + cur->size)
+			return (cur);
 		cur = cur->next_alloc;
 	}
 	return (0);
 }
 
-unsigned int	find_header(void *ptr, void *header)
+unsigned int	find_header(void *ptr, void **header)
 {
-	header = 0;
-	header = check_tiny(ptr);
-	if (header)
+	*header = 0;
+	*header = check_tiny(ptr);
+	if (*header)
 		return (TINY);
-	header = check_small(ptr);
-	if (header)
+	*header = check_small(ptr);
+	if (*header)
 		return (SMALL);
-	header = check_large(ptr);
-	if (header)
+	*header = check_large(ptr);
+	if (*header)
 		return (LARGE);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:52:38 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/13 21:57:29 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/14 06:10:55 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void			free(void *ptr)
 	if (!info)
 		setup_malloc();
 	header = 0;
-	zone = find_header(ptr, header);
+	zone = find_header(ptr, &header);
 	if (zone == TINY)
 		free_tiny(header);
 	else if (zone == SMALL)

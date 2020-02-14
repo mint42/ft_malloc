@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 18:47:57 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/09 03:12:33 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/14 06:11:36 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ void			free(void *ptr);
 */
 
 void			setup_malloc(void);
-void			add_ts_page(unsigned int zone);
-void			add_large_alloc(size_t used_size);
-unsigned int	find_header(void *ptr, void *header);
+void			new_tspage(unsigned int zone);
+void			new_lpages(size_t used_size);
+unsigned int	find_header(void *ptr, void **header);
 
 #endif
