@@ -6,7 +6,7 @@
 #    By: rreedy <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/16 11:54:37 by rreedy            #+#    #+#              #
-#    Updated: 2020/02/10 16:35:10 by rreedy           ###   ########.fr        #
+#    Updated: 2020/02/14 06:36:21 by rreedy           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,7 @@ clean:
 
 fclean: clean
 	@- $(RM) $(NAME)
+	@- $(RM) $(NAMELINK)
 	@- $(RM) -r test_main.o test_main.d $(TEST) $(TEST).dSYM
 
 re: fclean all
