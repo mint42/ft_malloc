@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:51:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/09 04:31:19 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/13 21:57:30 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	*realloc(void *ptr, size_t new_size)
 	unsigned int	old_size;
 	unsigned char	zone;
 
+	if (!info)
+		setup_malloc();
 	if (!ptr)
 		return (malloc(new_size));
 	new_ptr = 0;

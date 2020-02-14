@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:52:38 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/09 04:33:40 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/13 21:57:29 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ static void		free_tiny(struct s_tsAllocHeader *header)
 		info->free_tallocs_tail = info->free_tallocs_tail->next_free;
 	}
 }
-
-//	for if unmapping needs to happen -> else if ()
 
 static void		free_small(struct s_tsAllocHeader *header)
 {
@@ -66,6 +64,8 @@ void			free(void *ptr)
 	void			*header;
 	unsigned int	zone;
 
+	if (!info)
+		setup_malloc();
 	header = 0;
 	zone = find_header(ptr, header);
 	if (zone == TINY)
