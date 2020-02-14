@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:52:38 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/14 06:10:55 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/14 06:50:47 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-static void		free_tiny(struct s_tsAllocHeader *header)
+static void		free_tiny(void *header)
 {
 	struct s_tsPageHeader	*page_header;
 
-	page_header = (struct s_tsPageHeader *)((uintptr_t)header - (info->pagesize % (uintptr_t)header));
+	page_header = (struct s_tsPageHeader *)((uintptr_t)header - ((uintptr_t)header % info->pagesize));
 	if (page_header->nallocs == 1 && info->ntpages > NPAGES_OVERHEAD)
 		munmap(page_header, info->pagesize);
 	else
@@ -32,11 +32,11 @@ static void		free_tiny(struct s_tsAllocHeader *header)
 	}
 }
 
-static void		free_small(struct s_tsAllocHeader *header)
+static void		free_small(void *header)
 {
 	struct s_tsPageHeader	*page_header;
 
-	page_header = (struct s_tsPageHeader *)((uintptr_t)header - (info->pagesize % (uintptr_t)header));
+	page_header = (struct s_tsPageHeader *)((uintptr_t)header - ((uintptr_t)header % info->pagesize));
 	if (page_header->nallocs == 1 && info->nspages > NPAGES_OVERHEAD)
 		munmap(page_header, info->pagesize);
 	else
@@ -47,16 +47,16 @@ static void		free_small(struct s_tsAllocHeader *header)
 	}
 }
 
-static void		free_large(struct s_lAllocHeader *header)
+static void		free_large(void *header)
 {
 	struct s_lAllocHeader	*prev;
 
-	prev = header->prev_alloc;
+	prev = ((struct s_lAllocHeader *)(header))->prev_alloc;
 	if (!prev)
 		info->lallocs = info->lallocs->next_alloc;
 	else
-		prev->next_alloc = header->next_alloc;
-	munmap(header, header->size);
+		prev->next_alloc = ((struct s_lAllocHeader *)(header))->next_alloc;
+	munmap(header, ((struct s_lAllocHeader *)(header))->size);
 }
 
 void			free(void *ptr)
