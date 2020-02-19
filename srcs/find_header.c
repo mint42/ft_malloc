@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:22:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/14 06:44:01 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/19 11:42:20 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void		*check_tiny(void *ptr)
 	{
 		if ((uintptr_t)ptr >= (uintptr_t)cur + info->tny_pg_offset && (uintptr_t)ptr <= (uintptr_t)cur + info->pagesize && ((uintptr_t)ptr - ((uintptr_t)cur + info->tny_pg_offset)) % (info->ts_alheadr_siz + TNY_ALLOC_SIZE) >= info->ts_alheadr_siz)
 			return ((void *)((uintptr_t)cur + info->tny_pg_offset + ((info->ts_alheadr_siz + TNY_ALLOC_SIZE) *
-					((info->tny_pg_space / ((uintptr_t)ptr - ((uintptr_t)cur + info->tny_pg_offset))) + 1))));
+			(((uintptr_t)ptr - ((uintptr_t)cur + info->tny_pg_offset)) / (info->ts_alheadr_siz + TNY_ALLOC_SIZE)))));
 		cur = cur->next_page;
 	}
 	return (0);
@@ -41,7 +41,7 @@ static void		*check_small(void *ptr)
 	{
 		if ((uintptr_t)ptr >= (uintptr_t)cur + info->sml_pg_offset && (uintptr_t)ptr <= (uintptr_t)cur + info->pagesize && ((uintptr_t)ptr - ((uintptr_t)cur + info->sml_pg_offset)) % (info->ts_alheadr_siz + SML_ALLOC_SIZE) >= info->ts_alheadr_siz)
 			return ((void *)((uintptr_t)cur + info->sml_pg_offset + ((info->ts_alheadr_siz + SML_ALLOC_SIZE) *
-					((info->sml_pg_space / ((uintptr_t)ptr - ((uintptr_t)cur + info->sml_pg_offset))) + 1))));
+			(((uintptr_t)ptr - ((uintptr_t)cur + info->sml_pg_offset)) / (info->ts_alheadr_siz + SML_ALLOC_SIZE)))));
 		cur = cur->next_page;
 	}
 	return (0);
