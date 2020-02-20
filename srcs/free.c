@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:52:38 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/19 15:33:47 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/19 16:59:13 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@ static void		free_tiny(void *header)
 		munmap(page_header, info->pagesize);
 	else
 	{
+		((struct s_tsAllocHeader *)header)->free = 1;
+		((struct s_tsAllocHeader *)header)->used = 0;
+		((struct s_tsAllocHeader *)header)->next_free = 0;
 		--page_header->nallocs;
 		info->free_tallocs_tail->next_free = header;
 		info->free_tallocs_tail = info->free_tallocs_tail->next_free;
@@ -41,6 +44,9 @@ static void		free_small(void *header)
 		munmap(page_header, info->pagesize);
 	else
 	{
+		((struct s_tsAllocHeader *)header)->free = 1;
+		((struct s_tsAllocHeader *)header)->used = 0;
+		((struct s_tsAllocHeader *)header)->next_free = 0;
 		--page_header->nallocs;
 		info->free_sallocs_tail->next_free = header;
 		info->free_sallocs_tail = info->free_sallocs_tail->next_free;

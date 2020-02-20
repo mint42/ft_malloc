@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:22:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/19 13:29:15 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/19 17:11:26 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,17 @@
 static void		*check_tiny(void *ptr)
 {
 	struct s_tsPageHeader	*cur;
+	struct s_tsAllocHeader	*header;
 
 	cur = info->tpages;
 	while (cur)
 	{
 		if ((uintptr_t)ptr >= (uintptr_t)cur + info->tny_pg_offset && (uintptr_t)ptr < (uintptr_t)cur + info->pagesize && ((uintptr_t)ptr - ((uintptr_t)cur + info->tny_pg_offset)) % (info->ts_alheadr_siz + TNY_ALLOC_SIZE) >= info->ts_alheadr_siz)
-			return ((void *)((uintptr_t)cur + info->tny_pg_offset + ((info->ts_alheadr_siz + TNY_ALLOC_SIZE) *
-			(((uintptr_t)ptr - ((uintptr_t)cur + info->tny_pg_offset)) / (info->ts_alheadr_siz + TNY_ALLOC_SIZE)))));
+		{
+			header = (struct s_tsAllocHeader *)((uintptr_t)cur + info->tny_pg_offset + ((info->ts_alheadr_siz + TNY_ALLOC_SIZE) *
+			(((uintptr_t)ptr - ((uintptr_t)cur + info->tny_pg_offset)) / (info->ts_alheadr_siz + TNY_ALLOC_SIZE))));
+			return ((!header->free) ? header : 0);
+		}
 		cur = cur->next_page;
 	}
 	return (0);
@@ -35,13 +39,17 @@ static void		*check_tiny(void *ptr)
 static void		*check_small(void *ptr)
 {
 	struct s_tsPageHeader	*cur;
+	struct s_tsAllocHeader	*header;
 
 	cur = info->spages;
 	while (cur)
 	{
 		if ((uintptr_t)ptr >= (uintptr_t)cur + info->sml_pg_offset && (uintptr_t)ptr < (uintptr_t)cur + info->pagesize && ((uintptr_t)ptr - ((uintptr_t)cur + info->sml_pg_offset)) % (info->ts_alheadr_siz + SML_ALLOC_SIZE) >= info->ts_alheadr_siz)
-			return ((void *)((uintptr_t)cur + info->sml_pg_offset + ((info->ts_alheadr_siz + SML_ALLOC_SIZE) *
-			(((uintptr_t)ptr - ((uintptr_t)cur + info->sml_pg_offset)) / (info->ts_alheadr_siz + SML_ALLOC_SIZE)))));
+		{
+			header = (struct s_tsAllocHeader *)((uintptr_t)cur + info->tny_pg_offset + ((info->ts_alheadr_siz + TNY_ALLOC_SIZE) *
+			(((uintptr_t)ptr - ((uintptr_t)cur + info->tny_pg_offset)) / (info->ts_alheadr_siz + TNY_ALLOC_SIZE))));
+			return ((!header->free) ? header : 0);
+		}
 		cur = cur->next_page;
 	}
 	return (0);

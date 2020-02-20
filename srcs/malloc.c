@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:51:42 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/14 04:59:57 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/19 16:34:29 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void			*malloc(size_t size)
 {
 	void	*ptr;
 
+
+	write(1, "test\n", 5);
 	if (!info)
 		setup_malloc();
 	if (size <= TNY_ALLOC_SIZE)

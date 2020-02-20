@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:07:17 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/13 22:21:53 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/19 16:59:43 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 */
 struct							s_tsAllocHeader
 {
+	unsigned short				free;
 	unsigned short				used;
 	struct s_tsAllocHeader		*next_free;
 };

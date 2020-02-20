@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/02 00:36:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/19 14:09:25 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/19 16:48:59 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,16 @@ int		main()
 	{
 		free(allocs[i]);
 	}
-	free(allocs);
-	printf("test\n");
+	free(allocs + 100);
+
+	char	*a = malloc(16);
+	a[0] = 'a';
+	a = realloc(a + 1, 32);
+	printf("[%s]\n", a);
+	free(a + 1);
+	a = realloc(a + 1, 64);
+	if (a)
+		printf("err\n");
+
 	return (0);
 }
