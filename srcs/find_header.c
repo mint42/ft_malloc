@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:22:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/22 01:15:39 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/22 04:38:12 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <stddef.h>
 #include <unistd.h>
 
+#include <stdio.h>
 static void		*check_tiny(void *ptr)
 {
 	struct s_tsPageHeader	*cur;
@@ -29,8 +30,7 @@ static void		*check_tiny(void *ptr)
 		{
 			header = (struct s_tsAllocHeader *)((uintptr_t)cur + info->tny_pg_offset + ((info->ts_alheadr_siz + TNY_ALLOC_SIZE) *
 			(((uintptr_t)ptr - ((uintptr_t)cur + info->tny_pg_offset)) / (info->ts_alheadr_siz + TNY_ALLOC_SIZE))));
-			return (header);
-			//return ((!header->free) ? header : 0);
+			return ((!header->free) ? header : 0);
 		}
 		cur = cur->next_page;
 	}
@@ -47,10 +47,9 @@ static void		*check_small(void *ptr)
 	{
 		if ((uintptr_t)ptr >= (uintptr_t)cur + info->sml_pg_offset && (uintptr_t)ptr < (uintptr_t)cur + info->pagesize && ((uintptr_t)ptr - ((uintptr_t)cur + info->sml_pg_offset)) % (info->ts_alheadr_siz + SML_ALLOC_SIZE) >= info->ts_alheadr_siz)
 		{
-			header = (struct s_tsAllocHeader *)((uintptr_t)cur + info->tny_pg_offset + ((info->ts_alheadr_siz + TNY_ALLOC_SIZE) *
-			(((uintptr_t)ptr - ((uintptr_t)cur + info->tny_pg_offset)) / (info->ts_alheadr_siz + TNY_ALLOC_SIZE))));
-			return (header);
-			//return ((!header->free) ? header : 0);
+			header = (struct s_tsAllocHeader *)((uintptr_t)cur + info->sml_pg_offset + ((info->ts_alheadr_siz + SML_ALLOC_SIZE) *
+			(((uintptr_t)ptr - ((uintptr_t)cur + info->sml_pg_offset)) / (info->ts_alheadr_siz + SML_ALLOC_SIZE))));
+			return ((!header->free) ? header : 0);
 		}
 		cur = cur->next_page;
 	}

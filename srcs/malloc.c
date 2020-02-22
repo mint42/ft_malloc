@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:51:42 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/22 01:04:10 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/22 04:20:19 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,26 +21,27 @@ void			*malloc(size_t size)
 {
 	void	*ptr;
 
-	write(1, "test\n", 5);
 	if (!info)
 		setup_malloc();
 	if (size <= TNY_ALLOC_SIZE)
 	{
 		if (!info->free_tallocs)
 			new_tspage(TINY);
-		ptr = (void *)((uintptr_t)info->free_tallocs + info->ts_alheadr_siz);
-		info->free_tallocs = info->free_tallocs->next_free;
-//		((struct s_tsAllocHeader *)(ptr))->free = 0;
+		ptr = (void *)info->free_tallocs;
+		((struct s_tsAllocHeader *)(ptr))->free = 0;
 		((struct s_tsAllocHeader *)(ptr))->used = size;
+		ptr = (void *)((uintptr_t)ptr + info->ts_alheadr_siz);
+		info->free_tallocs = info->free_tallocs->next_free;
 	}
 	else if (size <= SML_ALLOC_SIZE)
 	{
 		if (!info->free_sallocs)
 			new_tspage(SMALL);
-		ptr = (void *)((uintptr_t)info->free_sallocs + info->ts_alheadr_siz);
-		info->free_sallocs = info->free_sallocs->next_free;
-//		((struct s_tsAllocHeader *)(ptr))->free = 0;
+		ptr = (void *)info->free_sallocs;
+		((struct s_tsAllocHeader *)(ptr))->free = 0;
 		((struct s_tsAllocHeader *)(ptr))->used = size;
+		ptr = (void *)((uintptr_t)ptr + info->ts_alheadr_siz);
+		info->free_sallocs = info->free_sallocs->next_free;
 	}
 	else
 	{

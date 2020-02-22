@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/02 00:36:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/19 16:48:59 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/22 04:20:02 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,20 @@ int		main()
 	{
 		free(allocs[i]);
 	}
+
 	for (int i = 0; i < 20; i++)
 	{
+		printf("test\n");
 		printf("SMALL TEST #%d\n", i + 1);
+		printf("test\n");
 		allocs[i] = realloc(allocs[i], 500);
+		printf("test\n");
 		memset(allocs[i], (i + 1) % 26 + 97, 499);
+		printf("test\n");
 		allocs[i][499] = '\0';
+		printf("test\n");
 		printf("%p: %s\n", allocs[i], allocs[i]);
+		printf("test\n");
 	}
 	for (int i = 0; i < 20; i++)
 	{

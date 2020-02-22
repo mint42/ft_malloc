@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/13 22:09:17 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/22 01:16:06 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/22 01:21:08 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static void			add_tiny_page(void *new_page)
 		info->free_tallocs = new_header;
 	else
 		info->free_tallocs_tail->next_free = new_header;
-//	new_header->free = 1;
+	new_header->free = 1;
 	new_header->used = 0;
 	new_header->next_free = 0;
 	i = 1;
@@ -67,7 +67,7 @@ static void			add_tiny_page(void *new_page)
 	{
 		new_header->next_free = (struct s_tsAllocHeader *)((uintptr_t)new_header + info->ts_alheadr_siz + TNY_ALLOC_SIZE);
 		new_header = new_header->next_free;
-//		new_header->free = 1;
+		new_header->free = 1;
 		new_header->used = 0;
 		new_header->next_free = 0;
 		++i;
@@ -97,7 +97,7 @@ static void		add_small_page(void *new_page)
 		info->free_sallocs = new_header;
 	else
 		info->free_sallocs_tail->next_free = new_header;
-//	new_header->free = 1;
+	new_header->free = 1;
 	new_header->used = 0;
 	new_header->next_free = 0;
 	i = 1;
@@ -105,7 +105,7 @@ static void		add_small_page(void *new_page)
 	{
 		new_header->next_free = (struct s_tsAllocHeader *)((uintptr_t)new_header + info->ts_alheadr_siz + SML_ALLOC_SIZE);
 		new_header = new_header->next_free;
-//		new_header->free = 1;
+		new_header->free = 1;
 		new_header->used = 0;
 		new_header->next_free = 0;
 		++i;
