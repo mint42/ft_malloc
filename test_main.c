@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/02 00:36:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/22 04:20:02 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/22 05:23:56 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ int		main()
 	for (int i = 0; i < 500; i++)
 	{
 		free(allocs[i]);
+		allocs[i] = 0;
 	}
 
 	for (int i = 0; i < 20; i++)
@@ -80,6 +81,7 @@ int		main()
 	for (int i = 0; i < 20; i++)
 	{
 		free(allocs[i]);
+		allocs[i] = 0;
 	}
 
 	for (int i = 0; i < 5; i++)
