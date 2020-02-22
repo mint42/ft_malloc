@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:22:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/19 17:11:26 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/22 01:15:39 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ static void		*check_tiny(void *ptr)
 		{
 			header = (struct s_tsAllocHeader *)((uintptr_t)cur + info->tny_pg_offset + ((info->ts_alheadr_siz + TNY_ALLOC_SIZE) *
 			(((uintptr_t)ptr - ((uintptr_t)cur + info->tny_pg_offset)) / (info->ts_alheadr_siz + TNY_ALLOC_SIZE))));
-			return ((!header->free) ? header : 0);
+			return (header);
+			//return ((!header->free) ? header : 0);
 		}
 		cur = cur->next_page;
 	}
@@ -48,7 +49,8 @@ static void		*check_small(void *ptr)
 		{
 			header = (struct s_tsAllocHeader *)((uintptr_t)cur + info->tny_pg_offset + ((info->ts_alheadr_siz + TNY_ALLOC_SIZE) *
 			(((uintptr_t)ptr - ((uintptr_t)cur + info->tny_pg_offset)) / (info->ts_alheadr_siz + TNY_ALLOC_SIZE))));
-			return ((!header->free) ? header : 0);
+			return (header);
+			//return ((!header->free) ? header : 0);
 		}
 		cur = cur->next_page;
 	}
