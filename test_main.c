@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/02 00:36:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/26 16:15:04 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/26 19:52:47 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,19 +28,19 @@ int		main()
 {
 	char	*str;
 
-	str = malloc(11);
+	str = malloc(12);
 	strcpy(str, "tiny malloc");
 	printf("%p: %s\n", str, str);
-	str = realloc(str, 13);
+	str = realloc(str, 14);
 	strcpy(str, "tiny malloc 2");
 	printf("%p: %s\n", str, str);
-	str = realloc(str, 28);
+	str = realloc(str, 29);
 	strcpy(str, "small malloc 1. is it small?");
 	printf("%p: %s\n", str, str);
-	str = realloc(str, 34);
+	str = realloc(str, 35);
 	strcpy(str, "small malloc 2. is it STILL small?");
 	printf("%p: %s\n", str, str);
-	str = realloc(str, 16);
+	str = realloc(str, 14);
 	strcpy(str, "tiny malloc 3");
 	printf("%p: %s\n", str, str);
 	str = realloc(str, 1000);
