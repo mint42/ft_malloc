@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:52:38 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/26 17:52:01 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/26 22:40:13 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void		free_tiny(void *header)
 	struct s_tsPageHeader	*page_header;
 
 	page_header = (struct s_tsPageHeader *)((uintptr_t)header - ((uintptr_t)header % info->pagesize));
-	if (page_header->nallocs == 1 && info->ntpages > NPAGES_OVERHEAD)
+	if (page_header->nallocs == 1 && info->ntpages > TNY_PAGES_OVERHEAD)
 		munmap(page_header, info->pagesize);
 	else
 	{
@@ -40,7 +40,7 @@ static void		free_small(void *header)
 	struct s_tsPageHeader	*page_header;
 
 	page_header = (struct s_tsPageHeader *)((uintptr_t)header - ((uintptr_t)header % info->pagesize));
-	if (page_header->nallocs == 1 && info->nspages > NPAGES_OVERHEAD)
+	if (page_header->nallocs == 1 && info->nspages > SML_PAGES_OVERHEAD)
 		munmap(page_header, info->pagesize);
 	else
 	{
@@ -69,7 +69,9 @@ static void		free_large(void *header)
 			info->lallocs = 0;
 	}
 	else
+	{
 		prev->next_alloc = ((struct s_lAllocHeader *)(header))->next_alloc;
+	}
 	munmap(header, ((struct s_lAllocHeader *)(header))->size);
 }
 

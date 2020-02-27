@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:38:09 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/14 00:21:41 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/26 23:08:40 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,14 @@ void			setup_malloc(void)
 	info->ntpages = 0;
 	info->nspages = 0;
 	i = 0;
-	while (i < NPAGES_OVERHEAD)
+	while (i < TNY_PAGES_OVERHEAD)
 	{
 		new_tspage(TINY);
+		++i;
+	}
+	i = 0;
+	while (i < SML_PAGES_OVERHEAD)
+	{
 		new_tspage(SMALL);
 		++i;
 	}

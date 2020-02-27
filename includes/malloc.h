@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 18:47:57 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/26 19:32:48 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/26 23:08:14 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,9 @@
 **	NPAGES_OVRHEAD	-> How many pages of memory will be kept as a buffer
 */
 # define TNY_ALLOC_SIZE 16
-# define SML_ALLOC_SIZE 512
-# define NPAGES_OVERHEAD 3
+# define SML_ALLOC_SIZE 1024
+# define TNY_PAGES_OVERHEAD 2
+# define SML_PAGES_OVERHEAD 34
 
 /*
 **	>:(		DO NOT CONFIGURE:
