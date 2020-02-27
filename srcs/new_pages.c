@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/13 22:09:17 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/22 01:21:08 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/26 17:48:17 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,9 @@ void		new_lpages(size_t used_size)
 	new_header = (struct s_lAllocHeader *)new_alloc;
 	new_header->size = size;
 	new_header->used = used_size;
-	if (!info->lallocs)
-	{
-		new_header->prev_alloc = 0;
-		new_header->next_alloc = 0;
-	}
-	else
+	new_header->prev_alloc = 0;
+	new_header->next_alloc = 0;
+	if (info->lallocs)
 	{
 		info->lallocs->prev_alloc = new_header;
 		new_header->next_alloc = info->lallocs;

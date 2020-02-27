@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:52:38 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/22 03:30:45 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/26 17:52:01 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,16 @@ static void		free_large(void *header)
 	prev = ((struct s_lAllocHeader *)(header))->prev_alloc;
 	if (!prev)
 	{
-		info->lallocs = info->lallocs->next_alloc;
-		info->lallocs->prev_alloc = 0;
+		if (info->lallocs->next_alloc)
+		{
+			info->lallocs = info->lallocs->next_alloc;
+			info->lallocs->prev_alloc = 0;
+		}
+		else
+			info->lallocs = 0;
 	}
 	else
-	{
 		prev->next_alloc = ((struct s_lAllocHeader *)(header))->next_alloc;
-	}
 	munmap(header, ((struct s_lAllocHeader *)(header))->size);
 }
 
