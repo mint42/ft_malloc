@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/02 00:36:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/22 05:23:56 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/02/26 16:15:04 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,32 +58,14 @@ int		main()
 		allocs[i][15] = '\0';
 		printf("%p: %s\n", allocs[i], allocs[i]);
 	}
-	for (int i = 0; i < 500; i++)
-	{
-		free(allocs[i]);
-		allocs[i] = 0;
-	}
-
 	for (int i = 0; i < 20; i++)
 	{
-		printf("test\n");
 		printf("SMALL TEST #%d\n", i + 1);
-		printf("test\n");
 		allocs[i] = realloc(allocs[i], 500);
-		printf("test\n");
 		memset(allocs[i], (i + 1) % 26 + 97, 499);
-		printf("test\n");
 		allocs[i][499] = '\0';
-		printf("test\n");
 		printf("%p: %s\n", allocs[i], allocs[i]);
-		printf("test\n");
 	}
-	for (int i = 0; i < 20; i++)
-	{
-		free(allocs[i]);
-		allocs[i] = 0;
-	}
-
 	for (int i = 0; i < 5; i++)
 	{
 		printf("LARGE TEST #%d\n", i + 1);
@@ -92,7 +74,7 @@ int		main()
 		allocs[i][999] = '\0';
 		printf("%p: %s\n", allocs[i], allocs[i]);
 	}
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 500; i++)
 	{
 		free(allocs[i]);
 	}
