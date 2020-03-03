@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/13 22:09:17 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/26 17:48:17 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/03/02 18:37:11 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ static void		add_small_page(void *new_page)
 	++info->nspages;
 }
 
-void		new_tspage(unsigned int zone)
+void		new_tspages(unsigned int zone)
 {
 	void					*new_page;
 	struct s_tsPageHeader	*new_pheader;

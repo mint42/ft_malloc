@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 18:47:57 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/26 23:08:14 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/03/02 18:39:56 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@
 **
 **	TNY_ALLOC_SIZ	-> size of a tiny allocation
 **	SML_ALLOC_SIZ	-> size of a small allocation
-**	NPAGES_OVRHEAD	-> How many pages of memory will be kept as a buffer
+**	NPAGES_OVRHEAD	-> How many pages of memory will be added when new pages
+**						are required. (keep around approx. 100 allocations)
 */
 # define TNY_ALLOC_SIZE 16
 # define SML_ALLOC_SIZE 1024
@@ -47,7 +48,7 @@ void			free(void *ptr);
 */
 
 void			setup_malloc(void);
-void			new_tspage(unsigned int zone);
+void			new_tspages(unsigned int zone);
 void			new_lpages(size_t used_size);
 unsigned int	find_header(void *ptr, void **header);
 

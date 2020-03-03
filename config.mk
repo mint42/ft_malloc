@@ -6,7 +6,7 @@
 #    By: rreedy <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/22 09:39:36 by rreedy            #+#    #+#              #
-#    Updated: 2020/02/26 18:15:00 by rreedy           ###   ########.fr        #
+#    Updated: 2020/03/02 18:42:43 by rreedy           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ CFLAGS += -Wall
 CFLAGS += -Wextra
 CFLAGS += -Werror
 CFLAGS += -I$(INCLUDE_DIR)
-CFLAGS += -mmacosx-version-min=10.5 -O2
+CFLAGS += -mmacosx-version-min=10.5
 
 MK_OBJ_FLAGS := -fPIC
 LNK_OBJ_FLAGS := -shared

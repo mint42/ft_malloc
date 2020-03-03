@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:51:42 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/22 04:20:19 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/03/02 18:36:36 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void			*malloc(size_t size)
 	if (size <= TNY_ALLOC_SIZE)
 	{
 		if (!info->free_tallocs)
-			new_tspage(TINY);
+			new_tspages(TINY);
 		ptr = (void *)info->free_tallocs;
 		((struct s_tsAllocHeader *)(ptr))->free = 0;
 		((struct s_tsAllocHeader *)(ptr))->used = size;
@@ -36,7 +36,7 @@ void			*malloc(size_t size)
 	else if (size <= SML_ALLOC_SIZE)
 	{
 		if (!info->free_sallocs)
-			new_tspage(SMALL);
+			new_tspages(SMALL);
 		ptr = (void *)info->free_sallocs;
 		((struct s_tsAllocHeader *)(ptr))->free = 0;
 		((struct s_tsAllocHeader *)(ptr))->used = size;

@@ -19,3 +19,15 @@ void	print(void)
 	printf("info->n_tny_alocs_per_pg    %zu\n", info->n_tny_alocs_per_pg);
 	printf("info->n_sml_alocs_per_pg    %zu\n", info->n_sml_alocs_per_pg);
 }
+
+void	print2(void)
+{
+	struct s_tsAllocHeader	*tmp;
+
+	tmp = info->free_tallocs;
+	while (tmp)
+	{
+		printf("%p\n", tmp);
+		tmp = tmp->next_free;
+	}
+}
