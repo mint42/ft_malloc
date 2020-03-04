@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:22:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/22 04:38:12 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/03/02 21:21:52 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,22 +17,23 @@
 #include <stddef.h>
 #include <unistd.h>
 
-#include <stdio.h>
 static void		*check_tiny(void *ptr)
 {
 	struct s_tsPageHeader	*cur;
 	struct s_tsAllocHeader	*header;
 
-	cur = info->tpages;
+	cur = info->tmmaps;
 	while (cur)
 	{
-		if ((uintptr_t)ptr >= (uintptr_t)cur + info->tny_pg_offset && (uintptr_t)ptr < (uintptr_t)cur + info->pagesize && ((uintptr_t)ptr - ((uintptr_t)cur + info->tny_pg_offset)) % (info->ts_alheadr_siz + TNY_ALLOC_SIZE) >= info->ts_alheadr_siz)
+		if ((uintptr_t)ptr >= (uintptr_t)cur + info->tny_mmap_offset &&
+			(uintptr_t)ptr < (uintptr_t)cur + info->tny_mmap_size &&
+			((uintptr_t)ptr - ((uintptr_t)cur + info->tny_mmap_offset)) % (info->ts_alheadr_siz + TNY_ALLOC_SIZE) >= info->ts_alheadr_siz)
 		{
-			header = (struct s_tsAllocHeader *)((uintptr_t)cur + info->tny_pg_offset + ((info->ts_alheadr_siz + TNY_ALLOC_SIZE) *
-			(((uintptr_t)ptr - ((uintptr_t)cur + info->tny_pg_offset)) / (info->ts_alheadr_siz + TNY_ALLOC_SIZE))));
+			header = (struct s_tsAllocHeader *)((uintptr_t)cur + info->tny_mmap_offset + ((info->ts_alheadr_siz + TNY_ALLOC_SIZE) *
+			(((uintptr_t)ptr - ((uintptr_t)cur + info->tny_mmap_offset)) / (info->ts_alheadr_siz + TNY_ALLOC_SIZE))));
 			return ((!header->free) ? header : 0);
 		}
-		cur = cur->next_page;
+		cur = cur->next_mmap;
 	}
 	return (0);
 }
@@ -42,16 +43,18 @@ static void		*check_small(void *ptr)
 	struct s_tsPageHeader	*cur;
 	struct s_tsAllocHeader	*header;
 
-	cur = info->spages;
+	cur = info->smmaps;
 	while (cur)
 	{
-		if ((uintptr_t)ptr >= (uintptr_t)cur + info->sml_pg_offset && (uintptr_t)ptr < (uintptr_t)cur + info->pagesize && ((uintptr_t)ptr - ((uintptr_t)cur + info->sml_pg_offset)) % (info->ts_alheadr_siz + SML_ALLOC_SIZE) >= info->ts_alheadr_siz)
+		if ((uintptr_t)ptr >= (uintptr_t)cur + info->sml_mmap_offset &&
+			(uintptr_t)ptr < (uintptr_t)cur + info->sml_mmap_size &&
+			((uintptr_t)ptr - ((uintptr_t)cur + info->sml_mmap_offset)) % (info->ts_alheadr_siz + SML_ALLOC_SIZE) >= info->ts_alheadr_siz)
 		{
-			header = (struct s_tsAllocHeader *)((uintptr_t)cur + info->sml_pg_offset + ((info->ts_alheadr_siz + SML_ALLOC_SIZE) *
-			(((uintptr_t)ptr - ((uintptr_t)cur + info->sml_pg_offset)) / (info->ts_alheadr_siz + SML_ALLOC_SIZE))));
+			header = (struct s_tsAllocHeader *)((uintptr_t)cur + info->sml_mmap_offset + ((info->ts_alheadr_siz + SML_ALLOC_SIZE) *
+			(((uintptr_t)ptr - ((uintptr_t)cur + info->sml_mmap_offset)) / (info->ts_alheadr_siz + SML_ALLOC_SIZE))));
 			return ((!header->free) ? header : 0);
 		}
-		cur = cur->next_page;
+		cur = cur->next_mmap;
 	}
 	return (0);
 }
@@ -63,8 +66,11 @@ static void		*check_large(void *ptr)
 	cur = info->lallocs;
 	while (cur)
 	{
-		if ((uintptr_t)ptr >= (uintptr_t)cur + info->lrg_alheadr_siz && (uintptr_t)ptr <= (uintptr_t)cur + cur->size)
+		if ((uintptr_t)ptr >= (uintptr_t)cur + info->lrg_alheadr_siz &&
+				(uintptr_t)ptr <= (uintptr_t)cur + cur->size)
+		{
 			return (cur);
+		}
 		cur = cur->next_alloc;
 	}
 	return (0);

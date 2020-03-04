@@ -1,19 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   new_pages.h                                        :+:      :+:    :+:   */
+/*   mmaps.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/13 22:09:29 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/13 22:09:38 by rreedy           ###   ########.fr       */
+/*   Created: 2020/03/02 20:41:18 by rreedy            #+#    #+#             */
+/*   Updated: 2020/03/02 20:41:31 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef NEW_PAGES_H
-# define NEW_PAGES_H
+#ifndef MMAPS_H
+# define MMAPS_H
 
-void		new_lpages(size_t used_size);
-void		new_tspage(unsigned int zone);
+void		new_tny_mmap(void);
+void		new_sml_mmap(void);
+void		new_lrg_mmap(size_t size);
 
 #endif

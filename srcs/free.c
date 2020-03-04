@@ -6,11 +6,12 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:52:38 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/26 22:40:13 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/03/04 15:48:22 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
+#include "find_header.h"
 #include "struct_tsPageHeader.h"
 #include "struct_tsAllocHeader.h"
 #include "struct_lAllocHeader.h"
@@ -21,9 +22,9 @@ static void		free_tiny(void *header)
 {
 	struct s_tsPageHeader	*page_header;
 
-	page_header = (struct s_tsPageHeader *)((uintptr_t)header - ((uintptr_t)header % info->pagesize));
-	if (page_header->nallocs == 1 && info->ntpages > TNY_PAGES_OVERHEAD)
-		munmap(page_header, info->pagesize);
+	page_header = (struct s_tsPageHeader *)((uintptr_t)header - (((struct s_tsAllocHeader *)header)->id * (info->ts_alheadr_siz + TNY_ALLOC_SIZE)) - (info->tny_mmap_offset - info->ts_pgheadr_siz));
+	if (page_header->nallocs == 1 && info->ntmmaps > 1)
+		munmap(page_header, info->tny_mmap_size);
 	else
 	{
 		((struct s_tsAllocHeader *)(header))->free = 1;
@@ -39,9 +40,9 @@ static void		free_small(void *header)
 {
 	struct s_tsPageHeader	*page_header;
 
-	page_header = (struct s_tsPageHeader *)((uintptr_t)header - ((uintptr_t)header % info->pagesize));
-	if (page_header->nallocs == 1 && info->nspages > SML_PAGES_OVERHEAD)
-		munmap(page_header, info->pagesize);
+	page_header = (struct s_tsPageHeader *)((uintptr_t)header - (((struct s_tsAllocHeader *)header)->id * (info->ts_alheadr_siz + SML_ALLOC_SIZE)) - (info->sml_mmap_offset - info->ts_pgheadr_siz));
+	if (page_header->nallocs == 1 && info->nsmmaps > 1)
+		munmap(page_header, info->sml_mmap_size);
 	else
 	{
 		((struct s_tsAllocHeader *)(header))->free = 1;

@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 18:47:57 by rreedy            #+#    #+#             */
-/*   Updated: 2020/03/02 18:39:56 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/03/04 15:54:23 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@
 */
 # define TNY_ALLOC_SIZE 16
 # define SML_ALLOC_SIZE 1024
-# define TNY_PAGES_OVERHEAD 2
-# define SML_PAGES_OVERHEAD 34
+# define TNY_OVERHEAD 1
+# define SML_OVERHEAD 26
 
 /*
 **	>:(		DO NOT CONFIGURE:
@@ -42,14 +42,5 @@ void			*malloc(size_t size);
 void			*calloc(size_t num, size_t size);
 void			*realloc(void *ptr, size_t size);
 void			free(void *ptr);
-
-/*
-**	Manage Malloc
-*/
-
-void			setup_malloc(void);
-void			new_tspages(unsigned int zone);
-void			new_lpages(size_t used_size);
-unsigned int	find_header(void *ptr, void **header);
 
 #endif

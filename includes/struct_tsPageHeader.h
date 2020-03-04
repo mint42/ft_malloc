@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:07:46 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/13 22:19:17 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/03/02 20:56:33 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 struct						s_tsPageHeader
 {
 	unsigned short			nallocs;
-	struct s_tsPageHeader	*next_page;
+	struct s_tsPageHeader	*next_mmap;
 };
 
 #endif
