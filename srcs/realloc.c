@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:51:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/03/04 17:50:08 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/03/04 22:37:59 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,16 @@ static void		*update_zone(unsigned int old_zone, void *header, void *ptr,
 	unsigned int	old_size;
 
 	new_ptr = malloc(new_size);
-	if (old_zone & (TINY | SMALL))
+	if (old_zone == TINY || old_zone == SMALL)
+	{
 		old_size = ((struct s_tnysml_alloc_header *)(header))->used;
+		cpy_mem(new_ptr, ptr, ((old_size < new_size) ? old_size : new_size));
+	}
 	else
+	{
 		old_size = ((struct s_lrg_alloc_header *)(header))->used;
-	cpy_mem(new_ptr, ptr, ((old_size < new_size) ? old_size : new_size));
+		cpy_mem(new_ptr, ptr, ((old_size < new_size) ? old_size : new_size));
+	}
 	free(ptr);
 	return (new_ptr);
 }
@@ -52,7 +57,7 @@ static void		*get_new_ptr(unsigned int zone, void *header, void *ptr,
 		new_ptr = ptr;
 	}
 	else
-		new_ptr = update_zone(zone, ptr, header, new_size);
+		new_ptr = update_zone(zone, header, ptr, new_size);
 	return (new_ptr);
 }
 
