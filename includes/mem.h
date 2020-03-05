@@ -6,13 +6,12 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 18:48:11 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/26 16:34:47 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/03/04 17:57:18 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MEM_H
 # define MEM_H
-
 
 void	zero_mem(void *ptr, size_t size);
 void	cpy_mem(void *new_ptr, void *ptr, size_t size);

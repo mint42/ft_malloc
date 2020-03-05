@@ -6,23 +6,18 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/02 00:36:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/26 19:52:47 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/03/04 16:48:28 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
-#include "struct_tsPageHeader.h"
-#include "struct_tsAllocHeader.h"
-#include "struct_lAllocHeader.h"
+#include "struct_tnysml_mmap_header.h"
+#include "struct_tnysml_alloc_header.h"
+#include "struct_lrg_alloc_header.h"
 #include <string.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <unistd.h>
-
-// tests:
-// run leaks to see if need to unmap pages -> wont work
-// run free first to see if segfault and need to init malloc from any of them
-//
 
 int		main()
 {

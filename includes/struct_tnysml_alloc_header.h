@@ -1,30 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   struct_lAllocHeader.h                              :+:      :+:    :+:   */
+/*   struct_tnysml_alloc_header.h                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/06 17:20:08 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/13 22:18:50 by rreedy           ###   ########.fr       */
+/*   Created: 2020/03/04 16:19:57 by rreedy            #+#    #+#             */
+/*   Updated: 2020/03/04 16:21:15 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STRUCT_LALLOCHEADER_H
-# define STRUCT_LALLOCHEADER_H
-
-# include <stddef.h>
+#ifndef STRUCT_TNYSML_ALLOC_HEADER_H
+# define STRUCT_TNYSML_ALLOC_HEADER_H
 
 /*
-**	This struct is stored at the front of the allocated memory
-**	(All large allocations are 1+ pages.)
+**	For tiny/small allocations, the next pointer will only be needed if the
+**	space is free. And if so, it will be added to a linked list of other free
+**	nodes for quick mallocing.
 */
-struct						s_lAllocHeader
+
+struct								s_tnysml_alloc_header
 {
-	size_t					used;
-	size_t					size;
-	struct s_lAllocHeader	*prev_alloc;
-	struct s_lAllocHeader	*next_alloc;
+	unsigned char					free;
+	unsigned short					used;
+	unsigned short					id;
+	struct s_tnysml_alloc_header	*next_free;
 };
 
 #endif

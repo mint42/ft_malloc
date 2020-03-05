@@ -6,130 +6,137 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/13 22:09:17 by rreedy            #+#    #+#             */
-/*   Updated: 2020/03/04 15:42:44 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/03/04 17:55:54 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 #include "mem.h"
-#include "struct_tsPageHeader.h"
-#include "struct_tsAllocHeader.h"
-#include "struct_lAllocHeader.h"
+#include "struct_tnysml_mmap_header.h"
+#include "struct_tnysml_alloc_header.h"
+#include "struct_lrg_alloc_header.h"
 #include <sys/mman.h>
 #include <stddef.h>
 #include <unistd.h>
 
-void		new_lrg_mmap(size_t used_size)
+static void		fill_new_tny_mmap(void *new_mmap)
 {
-	struct s_lAllocHeader	*new_header;
-	void					*new_alloc;
-	size_t					size;
+	struct s_tnysml_alloc_header	*header;
+	unsigned int					i;
 
-	size = ((used_size / info->pagesize) + 1) * info->pagesize;
-	new_alloc = mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-	if (!new_alloc)
-		return ;
-	new_header = (struct s_lAllocHeader *)new_alloc;
-	new_header->size = size;
-	new_header->used = used_size;
-	new_header->prev_alloc = 0;
-	new_header->next_alloc = 0;
-	if (info->lallocs)
-	{
-		info->lallocs->prev_alloc = new_header;
-		new_header->next_alloc = info->lallocs;
-	}
-	info->lallocs = new_header;
-}
-
-/*
-**	Divide up the page into individual allocation spaces each started by a
-**	ts_Alloc_Header struct, and link the new page and spaces to the
-**	global malloc struct.
-*/
-
-void		new_sml_mmap(void)
-{
-	void					*new_mmap;
-	struct s_tsPageHeader	*new_pheader;
-	struct s_tsAllocHeader	*new_alheader;
-	unsigned int			i;
-
-	new_mmap = mmap(0, info->sml_mmap_size, PROT_READ | PROT_WRITE,
-			MAP_PRIVATE | MAP_ANON, -1, 0);
-	if (!new_mmap)
-		return ;
-	new_pheader = (struct s_tsPageHeader *)new_mmap;
-	new_pheader->nallocs = 0;
-	new_pheader->next_mmap = 0;
-	if (!info->smmaps)
-		info->smmaps = (struct s_tsPageHeader *)new_mmap;
+	header = (struct s_tnysml_alloc_header *)
+			((uintptr_t)new_mmap + info->tny_mmap_offset);
+	if (!info->free_tny_allocs)
+		info->free_tny_allocs = header;
 	else
-		info->smmaps_tail->next_mmap = (struct s_tsPageHeader *)new_mmap;
-	new_alheader = (struct s_tsAllocHeader *)((uintptr_t)new_mmap + info->sml_mmap_offset);
-	if (!info->free_sallocs)
-		info->free_sallocs = new_alheader;
-	else
-		info->free_sallocs_tail->next_free = new_alheader;
-	new_alheader->free = 1;
-	new_alheader->used = 0;
-	new_alheader->id = 0;
-	new_alheader->next_free = 0;
+		info->free_tny_allocs_tail->next_free = header;
+	header->free = 1;
 	i = 1;
-	while (i < info->n_sml_alocs_per_mmap)
+	while (i < info->n_tny_allocs_per_mmap)
 	{
-		new_alheader->next_free = (struct s_tsAllocHeader *)((uintptr_t)new_alheader + info->ts_alheadr_siz + SML_ALLOC_SIZE);
-		new_alheader = new_alheader->next_free;
-		new_alheader->free = 1;
-		new_alheader->used = 0;
-		new_alheader->id = i;
-		new_alheader->next_free = 0;
+		header->next_free = (struct s_tnysml_alloc_header *)
+				((uintptr_t)header + info->tnysml_alheadr_siz + TNY_ALLOC_SIZE);
+		header = header->next_free;
+		header->free = 1;
+		header->id = i;
 		++i;
 	}
-	info->smmaps_tail = (struct s_tsPageHeader *)new_mmap;
-	info->free_sallocs_tail = new_alheader;
-	++info->nsmmaps;
+	info->free_tny_allocs_tail = header;
 }
 
-void		new_tny_mmap(void)
+static void		fill_new_sml_mmap(void *new_mmap)
 {
-	void					*new_mmap;
-	struct s_tsPageHeader	*new_pheader;
-	struct s_tsAllocHeader	*new_alheader;
-	unsigned int			i;
+	struct s_tnysml_alloc_header	*header;
+	unsigned int					i;
+
+	header = (struct s_tnysml_alloc_header *)
+			((uintptr_t)new_mmap + info->sml_mmap_offset);
+	if (!info->free_sml_allocs)
+		info->free_sml_allocs = header;
+	else
+		info->free_sml_allocs_tail->next_free = header;
+	header->free = 1;
+	i = 1;
+	while (i < info->n_sml_allocs_per_mmap)
+	{
+		header->next_free = (struct s_tnysml_alloc_header *)
+				((uintptr_t)header + info->tnysml_alheadr_siz + SML_ALLOC_SIZE);
+		header = header->next_free;
+		header->free = 1;
+		header->id = i;
+		++i;
+	}
+	info->free_sml_allocs_tail = header;
+}
+
+void			new_tny_mmap(void)
+{
+	void							*new_mmap;
+	struct s_tnysml_mmap_header		*new_mpheader;
 
 	new_mmap = mmap(0, info->tny_mmap_size, PROT_READ | PROT_WRITE,
 			MAP_PRIVATE | MAP_ANON, -1, 0);
 	if (!new_mmap)
 		return ;
-	new_pheader = (struct s_tsPageHeader *)new_mmap;
-	new_pheader->nallocs = 0;
-	new_pheader->next_mmap = 0;
-	if (!info->tmmaps)
-		info->tmmaps = (struct s_tsPageHeader *)new_mmap;
+	new_mpheader = (struct s_tnysml_mmap_header *)new_mmap;
+	new_mpheader->nallocs = 0;
+	new_mpheader->next_mmap = 0;
+	if (!info->tny_mmaps)
+		info->tny_mmaps = (struct s_tnysml_mmap_header *)new_mmap;
 	else
-		info->tmmaps_tail->next_mmap = (struct s_tsPageHeader *)new_mmap;
-	new_alheader = (struct s_tsAllocHeader *)((uintptr_t)new_mmap + info->tny_mmap_offset);
-	if (!info->free_tallocs)
-		info->free_tallocs = new_alheader;
-	else
-		info->free_tallocs_tail->next_free = new_alheader;
-	new_alheader->free = 1;
-	new_alheader->used = 0;
-	new_alheader->id = 0;
-	new_alheader->next_free = 0;
-	i = 1;
-	while (i < info->n_tny_alocs_per_mmap)
 	{
-		new_alheader->next_free = (struct s_tsAllocHeader *)((uintptr_t)new_alheader + info->ts_alheadr_siz + TNY_ALLOC_SIZE);
-		new_alheader = new_alheader->next_free;
-		new_alheader->free = 1;
-		new_alheader->used = 0;
-		new_alheader->id = i;
-		new_alheader->next_free = 0;
-		++i;
+		info->tny_mmaps_tail->next_mmap =
+			(struct s_tnysml_mmap_header *)new_mmap;
 	}
-	info->tmmaps_tail = (struct s_tsPageHeader *)new_mmap;
-	info->free_tallocs_tail = new_alheader;
-	++info->ntmmaps;
+	fill_new_tny_mmap(new_mmap);
+	info->tny_mmaps_tail = (struct s_tnysml_mmap_header *)new_mmap;
+	++info->n_tny_mmaps;
+}
+
+void			new_sml_mmap(void)
+{
+	void							*new_mmap;
+	struct s_tnysml_mmap_header		*new_mpheader;
+
+	new_mmap = mmap(0, info->sml_mmap_size, PROT_READ | PROT_WRITE,
+			MAP_PRIVATE | MAP_ANON, -1, 0);
+	if (!new_mmap)
+		return ;
+	new_mpheader = (struct s_tnysml_mmap_header *)new_mmap;
+	new_mpheader->nallocs = 0;
+	new_mpheader->next_mmap = 0;
+	if (!info->sml_mmaps)
+		info->sml_mmaps = (struct s_tnysml_mmap_header *)new_mmap;
+	else
+	{
+		info->sml_mmaps_tail->next_mmap =
+			(struct s_tnysml_mmap_header *)new_mmap;
+	}
+	fill_new_sml_mmap(new_mmap);
+	info->sml_mmaps_tail = (struct s_tnysml_mmap_header *)new_mmap;
+	++info->n_sml_mmaps;
+}
+
+void			new_lrg_mmap(size_t used_size)
+{
+	struct s_lrg_alloc_header	*new_header;
+	void						*new_alloc;
+	size_t						size;
+
+	size = ((used_size / info->pagesize) + 1) * info->pagesize;
+	new_alloc = mmap(0, size, PROT_READ | PROT_WRITE,
+			MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+	if (!new_alloc)
+		return ;
+	new_header = (struct s_lrg_alloc_header *)new_alloc;
+	new_header->size = size;
+	new_header->used = used_size;
+	new_header->prev_alloc = 0;
+	new_header->next_alloc = 0;
+	if (info->lrg_allocs)
+	{
+		info->lrg_allocs->prev_alloc = new_header;
+		new_header->next_alloc = info->lrg_allocs;
+	}
+	info->lrg_allocs = new_header;
 }

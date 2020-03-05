@@ -6,15 +6,15 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 18:47:57 by rreedy            #+#    #+#             */
-/*   Updated: 2020/03/04 15:54:23 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/03/04 18:03:36 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MALLOC_H
 # define MALLOC_H
 
-#include "global_struct_g_malloc.h"
-#include <stddef.h>
+# include "global_struct_s_malloc.h"
+# include <stddef.h>
 
 /*
 **	:)		CONFIGURE:
@@ -36,7 +36,7 @@
 # define SMALL 2
 # define LARGE 3
 
-struct g_malloc	*info;
+struct s_malloc	*info;
 
 void			*malloc(size_t size);
 void			*calloc(size_t num, size_t size);

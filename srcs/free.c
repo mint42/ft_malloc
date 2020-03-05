@@ -6,74 +6,80 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:52:38 by rreedy            #+#    #+#             */
-/*   Updated: 2020/03/04 15:48:22 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/03/04 17:56:23 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 #include "find_header.h"
-#include "struct_tsPageHeader.h"
-#include "struct_tsAllocHeader.h"
-#include "struct_lAllocHeader.h"
+#include "struct_tnysml_mmap_header.h"
+#include "struct_tnysml_alloc_header.h"
+#include "struct_lrg_alloc_header.h"
 #include <sys/mman.h>
 #include <unistd.h>
 
-static void		free_tiny(void *header)
+static void		free_tny(void *header)
 {
-	struct s_tsPageHeader	*page_header;
+	struct s_tnysml_mmap_header	*page_header;
 
-	page_header = (struct s_tsPageHeader *)((uintptr_t)header - (((struct s_tsAllocHeader *)header)->id * (info->ts_alheadr_siz + TNY_ALLOC_SIZE)) - (info->tny_mmap_offset - info->ts_pgheadr_siz));
-	if (page_header->nallocs == 1 && info->ntmmaps > 1)
+	page_header = (struct s_tnysml_mmap_header *)
+			((uintptr_t)header - (((struct s_tnysml_alloc_header *)header)->id *
+			(info->tnysml_alheadr_siz + TNY_ALLOC_SIZE)) -
+			(info->tny_mmap_offset - info->tnysml_mpheadr_siz));
+	if (page_header->nallocs == 1 && info->n_tny_mmaps > 1)
 		munmap(page_header, info->tny_mmap_size);
 	else
 	{
-		((struct s_tsAllocHeader *)(header))->free = 1;
-		((struct s_tsAllocHeader *)(header))->used = 0;
-		((struct s_tsAllocHeader *)(header))->next_free = 0;
+		((struct s_tnysml_alloc_header *)(header))->free = 1;
+		((struct s_tnysml_alloc_header *)(header))->used = 0;
+		((struct s_tnysml_alloc_header *)(header))->next_free = 0;
 		--page_header->nallocs;
-		info->free_tallocs_tail->next_free = header;
-		info->free_tallocs_tail = info->free_tallocs_tail->next_free;
+		info->free_tny_allocs_tail->next_free = header;
+		info->free_tny_allocs_tail = info->free_tny_allocs_tail->next_free;
 	}
 }
 
-static void		free_small(void *header)
+static void		free_sml(void *header)
 {
-	struct s_tsPageHeader	*page_header;
+	struct s_tnysml_mmap_header	*page_header;
 
-	page_header = (struct s_tsPageHeader *)((uintptr_t)header - (((struct s_tsAllocHeader *)header)->id * (info->ts_alheadr_siz + SML_ALLOC_SIZE)) - (info->sml_mmap_offset - info->ts_pgheadr_siz));
-	if (page_header->nallocs == 1 && info->nsmmaps > 1)
+	page_header = (struct s_tnysml_mmap_header *)
+			((uintptr_t)header - (((struct s_tnysml_alloc_header *)header)->id *
+			(info->tnysml_alheadr_siz + SML_ALLOC_SIZE)) -
+			(info->sml_mmap_offset - info->tnysml_mpheadr_siz));
+	if (page_header->nallocs == 1 && info->n_sml_mmaps > 1)
 		munmap(page_header, info->sml_mmap_size);
 	else
 	{
-		((struct s_tsAllocHeader *)(header))->free = 1;
-		((struct s_tsAllocHeader *)(header))->used = 0;
-		((struct s_tsAllocHeader *)(header))->next_free = 0;
+		((struct s_tnysml_alloc_header *)(header))->free = 1;
+		((struct s_tnysml_alloc_header *)(header))->used = 0;
+		((struct s_tnysml_alloc_header *)(header))->next_free = 0;
 		--page_header->nallocs;
-		info->free_sallocs_tail->next_free = header;
-		info->free_sallocs_tail = info->free_sallocs_tail->next_free;
+		info->free_sml_allocs_tail->next_free = header;
+		info->free_sml_allocs_tail = info->free_sml_allocs_tail->next_free;
 	}
 }
 
-static void		free_large(void *header)
+static void		free_lrg(void *header)
 {
-	struct s_lAllocHeader	*prev;
+	struct s_lrg_alloc_header	*prev;
 
-	prev = ((struct s_lAllocHeader *)(header))->prev_alloc;
+	prev = ((struct s_lrg_alloc_header *)(header))->prev_alloc;
 	if (!prev)
 	{
-		if (info->lallocs->next_alloc)
+		if (info->lrg_allocs->next_alloc)
 		{
-			info->lallocs = info->lallocs->next_alloc;
-			info->lallocs->prev_alloc = 0;
+			info->lrg_allocs = info->lrg_allocs->next_alloc;
+			info->lrg_allocs->prev_alloc = 0;
 		}
 		else
-			info->lallocs = 0;
+			info->lrg_allocs = 0;
 	}
 	else
 	{
-		prev->next_alloc = ((struct s_lAllocHeader *)(header))->next_alloc;
+		prev->next_alloc = ((struct s_lrg_alloc_header *)(header))->next_alloc;
 	}
-	munmap(header, ((struct s_lAllocHeader *)(header))->size);
+	munmap(header, ((struct s_lrg_alloc_header *)(header))->size);
 }
 
 void			free(void *ptr)
@@ -85,9 +91,9 @@ void			free(void *ptr)
 		setup_malloc();
 	zone = find_header(ptr, &header);
 	if (zone == TINY)
-		free_tiny(header);
+		free_tny(header);
 	else if (zone == SMALL)
-		free_small(header);
+		free_sml(header);
 	else if (zone == LARGE)
-		free_large(header);
+		free_lrg(header);
 }

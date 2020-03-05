@@ -1,29 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   struct_tsAllocHeader.h                             :+:      :+:    :+:   */
+/*   struct_tnysml_mmap_header.h                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/06 17:07:17 by rreedy            #+#    #+#             */
-/*   Updated: 2020/03/04 15:40:51 by rreedy           ###   ########.fr       */
+/*   Created: 2020/03/04 16:21:35 by rreedy            #+#    #+#             */
+/*   Updated: 2020/03/04 16:43:49 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STRUCT_TSALLOCHEADER_H
-# define STRUCT_TSALLOCHEADER_H
+#ifndef STRUCT_TNYSML_MMAP_HEADER_H
+# define STRUCT_TNYSML_MMAP_HEADER_H
+
+# include <stddef.h>
 
 /*
-**	For tiny/small allocs, the next pointer will only be needed if the space is
-**	free. And if so, it will be added to a linked list of other free nodes for
-**	quick access.
+**	Linked list of memory from mmap calls.
 */
-struct							s_tsAllocHeader
+
+struct								s_tnysml_mmap_header
 {
-	unsigned char				free;
-	unsigned short				used;
-	unsigned short				id;
-	struct s_tsAllocHeader		*next_free;
+	unsigned short					nallocs;
+	struct s_tnysml_mmap_header		*next_mmap;
 };
 
 #endif

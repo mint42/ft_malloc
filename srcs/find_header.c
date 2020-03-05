@@ -6,31 +6,36 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:22:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/03/02 21:21:52 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/03/04 17:56:49 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
-#include "struct_tsPageHeader.h"
-#include "struct_tsAllocHeader.h"
-#include "struct_lAllocHeader.h"
+#include "struct_tnysml_mmap_header.h"
+#include "struct_tnysml_alloc_header.h"
+#include "struct_lrg_alloc_header.h"
 #include <stddef.h>
 #include <unistd.h>
 
-static void		*check_tiny(void *ptr)
+static void		*check_tny(void *ptr)
 {
-	struct s_tsPageHeader	*cur;
-	struct s_tsAllocHeader	*header;
+	struct s_tnysml_mmap_header		*cur;
+	struct s_tnysml_alloc_header	*header;
 
-	cur = info->tmmaps;
+	cur = info->tny_mmaps;
 	while (cur)
 	{
 		if ((uintptr_t)ptr >= (uintptr_t)cur + info->tny_mmap_offset &&
-			(uintptr_t)ptr < (uintptr_t)cur + info->tny_mmap_size &&
-			((uintptr_t)ptr - ((uintptr_t)cur + info->tny_mmap_offset)) % (info->ts_alheadr_siz + TNY_ALLOC_SIZE) >= info->ts_alheadr_siz)
+				(uintptr_t)ptr < (uintptr_t)cur + info->tny_mmap_size &&
+				((uintptr_t)ptr - ((uintptr_t)cur + info->tny_mmap_offset)) %
+				(info->tnysml_alheadr_siz + TNY_ALLOC_SIZE) >=
+				info->tnysml_alheadr_siz)
 		{
-			header = (struct s_tsAllocHeader *)((uintptr_t)cur + info->tny_mmap_offset + ((info->ts_alheadr_siz + TNY_ALLOC_SIZE) *
-			(((uintptr_t)ptr - ((uintptr_t)cur + info->tny_mmap_offset)) / (info->ts_alheadr_siz + TNY_ALLOC_SIZE))));
+			header = (struct s_tnysml_alloc_header *)
+					((uintptr_t)cur + info->tny_mmap_offset +
+					((info->tnysml_alheadr_siz + TNY_ALLOC_SIZE) *
+					(((uintptr_t)ptr - ((uintptr_t)cur + info->tny_mmap_offset))
+					/ (info->tnysml_alheadr_siz + TNY_ALLOC_SIZE))));
 			return ((!header->free) ? header : 0);
 		}
 		cur = cur->next_mmap;
@@ -38,20 +43,25 @@ static void		*check_tiny(void *ptr)
 	return (0);
 }
 
-static void		*check_small(void *ptr)
+static void		*check_sml(void *ptr)
 {
-	struct s_tsPageHeader	*cur;
-	struct s_tsAllocHeader	*header;
+	struct s_tnysml_mmap_header		*cur;
+	struct s_tnysml_alloc_header	*header;
 
-	cur = info->smmaps;
+	cur = info->sml_mmaps;
 	while (cur)
 	{
 		if ((uintptr_t)ptr >= (uintptr_t)cur + info->sml_mmap_offset &&
-			(uintptr_t)ptr < (uintptr_t)cur + info->sml_mmap_size &&
-			((uintptr_t)ptr - ((uintptr_t)cur + info->sml_mmap_offset)) % (info->ts_alheadr_siz + SML_ALLOC_SIZE) >= info->ts_alheadr_siz)
+				(uintptr_t)ptr < (uintptr_t)cur + info->sml_mmap_size &&
+				((uintptr_t)ptr - ((uintptr_t)cur + info->sml_mmap_offset)) %
+				(info->tnysml_alheadr_siz + SML_ALLOC_SIZE) >=
+				info->tnysml_alheadr_siz)
 		{
-			header = (struct s_tsAllocHeader *)((uintptr_t)cur + info->sml_mmap_offset + ((info->ts_alheadr_siz + SML_ALLOC_SIZE) *
-			(((uintptr_t)ptr - ((uintptr_t)cur + info->sml_mmap_offset)) / (info->ts_alheadr_siz + SML_ALLOC_SIZE))));
+			header = (struct s_tnysml_alloc_header *)
+					((uintptr_t)cur + info->sml_mmap_offset +
+					((info->tnysml_alheadr_siz + SML_ALLOC_SIZE) *
+					(((uintptr_t)ptr - ((uintptr_t)cur + info->sml_mmap_offset))
+					/ (info->tnysml_alheadr_siz + SML_ALLOC_SIZE))));
 			return ((!header->free) ? header : 0);
 		}
 		cur = cur->next_mmap;
@@ -59,11 +69,11 @@ static void		*check_small(void *ptr)
 	return (0);
 }
 
-static void		*check_large(void *ptr)
+static void		*check_lrg(void *ptr)
 {
-	struct s_lAllocHeader	*cur;
+	struct s_lrg_alloc_header	*cur;
 
-	cur = info->lallocs;
+	cur = info->lrg_allocs;
 	while (cur)
 	{
 		if ((uintptr_t)ptr >= (uintptr_t)cur + info->lrg_alheadr_siz &&
@@ -79,13 +89,13 @@ static void		*check_large(void *ptr)
 unsigned int	find_header(void *ptr, void **header)
 {
 	*header = 0;
-	*header = check_tiny(ptr);
+	*header = check_tny(ptr);
 	if (*header)
 		return (TINY);
-	*header = check_small(ptr);
+	*header = check_sml(ptr);
 	if (*header)
 		return (SMALL);
-	*header = check_large(ptr);
+	*header = check_lrg(ptr);
 	if (*header)
 		return (LARGE);
 	return (0);

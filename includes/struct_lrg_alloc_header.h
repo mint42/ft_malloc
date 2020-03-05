@@ -1,28 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   struct_tsPageHeader.h                              :+:      :+:    :+:   */
+/*   struct_lrg_alloc_header.h                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/06 17:07:46 by rreedy            #+#    #+#             */
-/*   Updated: 2020/03/02 20:56:33 by rreedy           ###   ########.fr       */
+/*   Created: 2020/03/04 16:18:06 by rreedy            #+#    #+#             */
+/*   Updated: 2020/03/04 16:18:57 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STRUCT_TSPAGEHEADER_H
-# define STRUCT_TSPAGEHEADER_H
+#ifndef STRUCT_LRG_ALLOC_HEADER_H
+# define STRUCT_LRG_ALLOC_HEADER_H
 
 # include <stddef.h>
 
 /*
-**	Linked list of allocated pages.
-**	Stored at the very front of tiny and small pages to link them together.
+**	This struct is stored at the front of the allocated memory
+**	(All large allocations are 1+ pages.)
 */
-struct						s_tsPageHeader
+
+struct							s_lrg_alloc_header
 {
-	unsigned short			nallocs;
-	struct s_tsPageHeader	*next_mmap;
+	size_t						used;
+	size_t						size;
+	struct s_lrg_alloc_header	*prev_alloc;
+	struct s_lrg_alloc_header	*next_alloc;
 };
 
 #endif
