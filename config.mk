@@ -6,7 +6,7 @@
 #    By: rreedy <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/22 09:39:36 by rreedy            #+#    #+#              #
-#    Updated: 2020/03/02 18:42:43 by rreedy           ###   ########.fr        #
+#    Updated: 2020/03/04 22:45:28 by rreedy           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,12 +21,11 @@ SRC_DIR := ./srcs
 INCLUDE_DIR := ./includes
 
 CC := gcc
-CFLAGS := -g
+CFLAGS += -g
 CFLAGS += -Wall
 CFLAGS += -Wextra
 CFLAGS += -Werror
 CFLAGS += -I$(INCLUDE_DIR)
-CFLAGS += -mmacosx-version-min=10.5
 
 MK_OBJ_FLAGS := -fPIC
 LNK_OBJ_FLAGS := -shared
@@ -34,8 +33,6 @@ LNK_OBJ_FLAGS := -shared
 # testing
 
 TEST := test
-
 LIB := ft_malloc
 LIB_DIR := ./
-
-LDFLAGS := -l$(LIB) -L$(LIB_DIR)
+LDFLAGS += -L$(LIB_DIR) -l$(LIB)
