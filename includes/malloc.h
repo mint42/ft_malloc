@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/08 18:47:57 by rreedy            #+#    #+#             */
-/*   Updated: 2020/03/04 18:03:36 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/03/04 20:13:30 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define MALLOC_H
 
 # include "global_struct_s_malloc.h"
-# include <stddef.h>
 
 /*
 **	:)		CONFIGURE:

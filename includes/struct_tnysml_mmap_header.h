@@ -6,14 +6,12 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/04 16:21:35 by rreedy            #+#    #+#             */
-/*   Updated: 2020/03/04 16:43:49 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/03/04 20:12:34 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCT_TNYSML_MMAP_HEADER_H
 # define STRUCT_TNYSML_MMAP_HEADER_H
-
-# include <stddef.h>
 
 /*
 **	Linked list of memory from mmap calls.

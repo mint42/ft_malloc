@@ -6,12 +6,13 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 16:23:02 by rreedy            #+#    #+#             */
-/*   Updated: 2020/02/26 17:52:46 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/03/04 20:15:09 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 #include "mem.h"
+#include <unistd.h>
 
 void			*calloc(size_t num, size_t size)
 {

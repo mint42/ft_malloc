@@ -6,14 +6,14 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/04 16:18:06 by rreedy            #+#    #+#             */
-/*   Updated: 2020/03/04 16:18:57 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/03/04 20:13:30 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCT_LRG_ALLOC_HEADER_H
 # define STRUCT_LRG_ALLOC_HEADER_H
 
-# include <stddef.h>
+# include <unistd.h>
 
 /*
 **	This struct is stored at the front of the allocated memory

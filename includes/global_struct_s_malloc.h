@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/02 00:33:56 by rreedy            #+#    #+#             */
-/*   Updated: 2020/03/04 18:02:27 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/03/04 20:12:52 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "struct_tnysml_mmap_header.h"
 # include "struct_tnysml_alloc_header.h"
 # include "struct_lrg_alloc_header.h"
-# include <stddef.h>
+# include <unistd.h>
 
 /*
 **	Global struct holding heads and tails to the different zones, and also

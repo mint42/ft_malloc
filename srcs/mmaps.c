@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/13 22:09:17 by rreedy            #+#    #+#             */
-/*   Updated: 2020/03/04 17:55:54 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/03/04 20:09:23 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 #include "struct_tnysml_alloc_header.h"
 #include "struct_lrg_alloc_header.h"
 #include <sys/mman.h>
-#include <stddef.h>
 #include <unistd.h>
 
 static void		fill_new_tny_mmap(void *new_mmap)
