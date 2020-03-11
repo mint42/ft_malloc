@@ -10,6 +10,7 @@ To set up this project, run `git clone https://github.com/mint42/ft_malloc` in t
 
 - https://www.cprogramming.com/tutorial/virtual_memory_and_heaps.html
 - https://en.wikipedia.org/wiki/C_dynamic_memory_allocation
+- https://danluu.com/malloc-tutorial/
 
 ## Author
 
