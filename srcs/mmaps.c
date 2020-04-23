@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   new_pages.c                                        :+:      :+:    :+:   */
+/*   mmaps.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/13 22:09:17 by rreedy            #+#    #+#             */
-/*   Updated: 2020/03/04 20:09:23 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/04/23 00:27:38 by mint             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "struct_lrg_alloc_header.h"
 #include <sys/mman.h>
 #include <unistd.h>
+#include <stdint.h>
 
 static void		fill_new_tny_mmap(void *new_mmap)
 {

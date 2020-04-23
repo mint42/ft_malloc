@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:51:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/03/07 06:35:07 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/04/23 00:27:46 by mint             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "struct_tnysml_mmap_header.h"
 #include "struct_tnysml_alloc_header.h"
 #include <unistd.h>
+#include <stdint.h>
 
 static void		*update_zone(unsigned int old_zone, void *header,
 						size_t new_size)

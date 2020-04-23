@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:52:38 by rreedy            #+#    #+#             */
-/*   Updated: 2020/03/04 20:08:11 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/04/23 00:27:16 by mint             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "struct_lrg_alloc_header.h"
 #include <sys/mman.h>
 #include <unistd.h>
+#include <stdint.h>
 
 static void		free_tny(void *header)
 {

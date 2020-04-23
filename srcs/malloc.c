@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:51:42 by rreedy            #+#    #+#             */
-/*   Updated: 2020/03/04 20:08:42 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/04/23 00:27:29 by mint             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "struct_tnysml_mmap_header.h"
 #include "struct_tnysml_alloc_header.h"
 #include <unistd.h>
+#include <stdint.h>
 
 static void		*malloc_tny(size_t size)
 {

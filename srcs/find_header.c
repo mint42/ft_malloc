@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   find_ptr.c                                         :+:      :+:    :+:   */
+/*   find_header.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:22:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/03/04 20:07:59 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/04/23 00:26:49 by mint             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "struct_tnysml_alloc_header.h"
 #include "struct_lrg_alloc_header.h"
 #include <unistd.h>
+#include <stdint.h>
 
 static void		*check_tny(void *ptr)
 {
