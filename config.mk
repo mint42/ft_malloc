@@ -6,7 +6,7 @@
 #    By: rreedy <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/22 09:39:36 by rreedy            #+#    #+#              #
-#    Updated: 2020/04/27 07:26:49 by mint             ###   ########.fr        #
+#    Updated: 2020/04/27 08:57:05 by rreedy           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,12 +20,7 @@ NAMELINK := libft_malloc.so
 LIBFT_NAME := libft.a
 LIBFT_DIR := ./libft
 LIBFT_MAKEFILE := Makefile
-
-LIBS := ft_malloc
-LIBS += ft
-LIB_DIRS := ./
-LIB_DIRS += $(LIBFT_DIR)
-LIB_INCLUDE_DIR := $(LIBFT_DIR)/includes
+LIBFT_INCLUDE_DIR := $(LIBFT_DIR)/includes
 
 SRC_DIR := ./srcs
 INCLUDE_DIR := ./includes
@@ -35,9 +30,9 @@ CFLAGS += -g
 CFLAGS += -Wall
 CFLAGS += -Wextra
 CFLAGS += -Werror
-CFLAGS += -I$(INCLUDE_DIR) -I$(LIB_INCLUDE_DIR)
-LDFLAGS := $(foreach lib_dirs,$(LIB_DIRS),-L$(lib_dirs))
-LDFLAGS += $(foreach lib,$(LIBS),-l$(lib))
+CFLAGS += -I$(INCLUDE_DIR) -I$(LIBFT_INCLUDE_DIR)
+LIBFT_LDFLAGS := -L$(LIBFT_DIR) -lft
+MALLOC_LDFLAGS := -L./ -lft_malloc
 
 MK_OBJ_FLAGS := -fPIC
 LNK_OBJ_FLAGS := -shared

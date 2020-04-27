@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/07 03:03:10 by rreedy            #+#    #+#             */
-/*   Updated: 2020/04/27 07:25:07 by mint             ###   ########.fr       */
+/*   Updated: 2020/04/27 09:00:46 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ void	show_tny(void)
 			if (!(((struct s_tnysml_alloc_header *)
 					((uintptr_t)cur + info->tny_mmap_offset +
 					((info->tnysml_alheadr_siz + TNY_ALLOC_SIZE) * i)))->free))
-			ft_printf("%#.8x - %#.8x : %d bytes\n", addr, addr + used, used);
+				ft_printf("%#.8x - %#.8x : %d bytes\n",
+						addr, addr + used, used);
 			++i;
 		}
 		cur = cur->next_mmap;
@@ -68,7 +69,8 @@ void	show_sml(void)
 			if (!(((struct s_tnysml_alloc_header *)
 					((uintptr_t)cur + info->sml_mmap_offset +
 					((info->tnysml_alheadr_siz + SML_ALLOC_SIZE) * i)))->free))
-			ft_printf("%#.8x - %#.8x : %d bytes\n", addr, addr + used, used);
+				ft_printf("%#.8x - %#.8x : %d bytes\n",
+						addr, addr + used, used);
 			++i;
 		}
 		cur = cur->next_mmap;

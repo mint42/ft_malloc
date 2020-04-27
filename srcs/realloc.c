@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:51:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/04/27 07:34:24 by mint             ###   ########.fr       */
+/*   Updated: 2020/04/27 08:28:36 by rreedy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,14 @@ static void		*update_zone(unsigned int old_zone, void *header,
 	if (old_zone == TINY || old_zone == SMALL)
 	{
 		old_size = ((struct s_tnysml_alloc_header *)(header))->used;
-		ft_memcpy(new_ptr, (void *)((uintptr_t)header +
+		new_ptr = ft_memcpy(new_ptr, (void *)((uintptr_t)header +
 				info->tnysml_alheadr_siz),
 				((old_size < new_size) ? old_size : new_size));
 	}
 	else
 	{
 		old_size = ((struct s_lrg_alloc_header *)(header))->used;
-		ft_memcpy(new_ptr, (void *)((uintptr_t)header +
+		new_ptr = ft_memcpy(new_ptr, (void *)((uintptr_t)header +
 				info->lrg_alheadr_siz),
 				((old_size < new_size) ? old_size : new_size));
 	}

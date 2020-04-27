@@ -6,7 +6,7 @@
 #    By: rreedy <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/16 11:54:37 by rreedy            #+#    #+#              #
-#    Updated: 2020/04/27 07:16:56 by mint             ###   ########.fr        #
+#    Updated: 2020/04/27 08:55:02 by rreedy           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,14 +24,14 @@ MAKE_LIBFT := $(MAKE) -C $(LIBFT_DIR) -f $(LIBFT_MAKEFILE) --no-print-directory
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS) Makefile config.mk
-	$(CC) $(CFLAGS) $(LNK_OBJ_FLAGS) $(OBJS) -o $(NAME)
+	$(CC) $(CFLAGS) $(LNK_OBJ_FLAGS) $(OBJS) -o $(NAME) $(LIBFT_LDFLAGS)
 	ln -sf $(NAME) $(NAMELINK)
 
 $(LIBFT):
 	@- $(MAKE_LIBFT) all
 
 $(TEST): $(NAME) test_main.c
-	$(CC) $(CFLAGS) test_main.c -o $(TEST) $(LDFLAGS)
+	$(CC) $(CFLAGS) test_main.c -o $(TEST) $(LIBFT_LDFLAGS) $(MALLOC_LDFLAGS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(MK_OBJ_FLAGS) -MMD -MT $@ -c $< -o $@
