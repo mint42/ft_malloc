@@ -6,13 +6,13 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/06 17:51:23 by rreedy            #+#    #+#             */
-/*   Updated: 2020/04/23 00:27:46 by mint             ###   ########.fr       */
+/*   Updated: 2020/04/27 07:34:24 by mint             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
+#include "ft_mem.h"
 #include "find_header.h"
-#include "mem.h"
 #include "struct_tnysml_mmap_header.h"
 #include "struct_tnysml_alloc_header.h"
 #include <unistd.h>
@@ -28,13 +28,15 @@ static void		*update_zone(unsigned int old_zone, void *header,
 	if (old_zone == TINY || old_zone == SMALL)
 	{
 		old_size = ((struct s_tnysml_alloc_header *)(header))->used;
-		cpy_mem(new_ptr, (void *)((uintptr_t)header + info->tnysml_alheadr_siz),
+		ft_memcpy(new_ptr, (void *)((uintptr_t)header +
+				info->tnysml_alheadr_siz),
 				((old_size < new_size) ? old_size : new_size));
 	}
 	else
 	{
 		old_size = ((struct s_lrg_alloc_header *)(header))->used;
-		cpy_mem(new_ptr, (void *)((uintptr_t)header + info->lrg_alheadr_siz),
+		ft_memcpy(new_ptr, (void *)((uintptr_t)header +
+				info->lrg_alheadr_siz),
 				((old_size < new_size) ? old_size : new_size));
 	}
 	return (new_ptr);

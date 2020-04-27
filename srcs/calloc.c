@@ -6,12 +6,12 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 16:23:02 by rreedy            #+#    #+#             */
-/*   Updated: 2020/03/04 20:15:09 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/04/27 07:34:13 by mint             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
-#include "mem.h"
+#include "ft_mem.h"
 #include <unistd.h>
 
 void			*calloc(size_t num, size_t size)
@@ -22,6 +22,6 @@ void			*calloc(size_t num, size_t size)
 		return (0);
 	ptr = malloc(num * size);
 	if (ptr)
-		zero_mem(ptr, num * size);
+		ft_bzero(ptr, num * size);
 	return (ptr);
 }

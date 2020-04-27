@@ -6,15 +6,15 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/07 03:03:10 by rreedy            #+#    #+#             */
-/*   Updated: 2020/04/23 00:27:53 by mint             ###   ########.fr       */
+/*   Updated: 2020/04/27 07:25:07 by mint             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
-#include "malloc.h"
 #include "struct_tnysml_mmap_header.h"
 #include "struct_tnysml_alloc_header.h"
 #include "struct_lrg_alloc_header.h"
+#include "ft_printf.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <stdint.h>
@@ -40,7 +40,7 @@ void	show_tny(void)
 			if (!(((struct s_tnysml_alloc_header *)
 					((uintptr_t)cur + info->tny_mmap_offset +
 					((info->tnysml_alheadr_siz + TNY_ALLOC_SIZE) * i)))->free))
-				printf("%#.8x - %#.8x : %d bytes\n", addr, addr + used, used);
+			ft_printf("%#.8x - %#.8x : %d bytes\n", addr, addr + used, used);
 			++i;
 		}
 		cur = cur->next_mmap;
@@ -68,7 +68,7 @@ void	show_sml(void)
 			if (!(((struct s_tnysml_alloc_header *)
 					((uintptr_t)cur + info->sml_mmap_offset +
 					((info->tnysml_alheadr_siz + SML_ALLOC_SIZE) * i)))->free))
-				printf("%#.8x - %#.8x : %d bytes\n", addr, addr + used, used);
+			ft_printf("%#.8x - %#.8x : %d bytes\n", addr, addr + used, used);
 			++i;
 		}
 		cur = cur->next_mmap;
@@ -86,7 +86,7 @@ void	show_lrg(void)
 	{
 		addr = (uintptr_t)cur + info->lrg_alheadr_siz;
 		used = cur->used;
-		printf("%#.8x - %#.8x : %d bytes\n", addr, addr + used, used);
+		ft_printf("%#.8x - %#.8x : %d bytes\n", addr, addr + used, used);
 		cur = cur->next_alloc;
 	}
 }
