@@ -6,7 +6,7 @@
 /*   By: rreedy <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/07 03:03:10 by rreedy            #+#    #+#             */
-/*   Updated: 2020/04/27 09:00:46 by rreedy           ###   ########.fr       */
+/*   Updated: 2020/04/27 23:21:48 by mint             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,10 @@ void	show_lrg(void)
 
 void	show_alloc_mem(void)
 {
-	write(1, "TINY :\n", 7);
+	ft_printf("TINY: %#.8x\n", info->tny_mmaps);
 	show_tny();
-	write(1, "SMALL :\n", 8);
+	ft_printf("SMALL: %#.8x\n", info->sml_mmaps);
 	show_sml();
-	write(1, "LARGE :\n", 8);
+	ft_printf("LARGE: %#.8x\n", info->lrg_allocs);
 	show_lrg();
 }
