@@ -4,7 +4,7 @@ ft_malloc is a recreation of the malloc dynamic allocation library. This include
 
 ## Getting Started
 
-To set up this project, run `git clone https://github.com/mint42/ft_malloc` in the folder of your choice. You can then run `make` in the root of that repository which will use the Makefile to build the library.
+ft_malloc uses my 42 library which has been included as a git submodule. To set up this project, run `git clone https://github.com/mint42/ft_malloc` in the folder of your choice. Next, from the root of the ft_malloc repository run `git submodule update --init libft` to import the contents of the libft repository. Finally you can run `make` which will use the Makefile to build libft, and then the malloc library.
 
 ## References 
 
